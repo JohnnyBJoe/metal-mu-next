@@ -1,41 +1,28 @@
-import { prisma } from "@/lib/prisma";
+import Header from "@/components/layout/Header";
+import LeftPanel from "@/components/layout/LeftPanel";
+import CenterPanel from "@/components/layout/CenterPanel";
+import RightPanel from "@/components/layout/RightPanel";
 
-export default async function Home() {
-  const bands = await prisma.system_interprets.findMany({
-    take: 20,
-    orderBy: {
-      name: "asc",
-    },
-  });
-
+export default function Home() {
   return (
-    <main className="max-w-6xl mx-auto p-8">
-      <h1 className="text-4xl font-bold mb-8">Metal MU</h1>
+    <div className="min-h-screen bg-zinc-950 text-white">
+      <Header />
 
-      <p className="mb-6 text-gray-600">
-        Počet načtených interpretů: <strong>{bands.length}</strong>
-      </p>
+      <div className="grid grid-cols-12 gap-4 p-4">
 
-      <div className="grid gap-4">
-        {bands.map((band) => (
-          <div
-            key={band.id_i}
-            className="border rounded-lg p-4 shadow-sm"
-          >
-            <h2 className="text-2xl font-semibold">
-              {band.name}
-            </h2>
+        <div className="col-span-3">
+          <LeftPanel />
+        </div>
 
-            <p>
-              <strong>Město:</strong> {band.city}
-            </p>
+        <div className="col-span-6">
+          <CenterPanel />
+        </div>
 
-            <p>
-              <strong>Styly:</strong> {band.styles}
-            </p>
-          </div>
-        ))}
+        <div className="col-span-3">
+          <RightPanel />
+        </div>
+
       </div>
-    </main>
+    </div>
   );
 }
