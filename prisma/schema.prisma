@@ -1,130 +1,128 @@
 generator client {
   provider = "prisma-client-js"
-  
 }
 
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
-model system_concerts {
-  id_c      Int      @id @default(autoincrement()) @db.UnsignedInt
-  interpret Int
-  datum     DateTime @db.Date
-  misto     String   @db.VarChar(120)
-  popis     String   @db.Text
 
-  @@fulltext([misto], map: "misto")
-  @@fulltext([popis], map: "popis")
+model Country {
+  id   Int     @id @default(autoincrement())
+  name String  @unique @db.VarChar(100)
+  code String? @db.Char(2)
+
+  bands Band[]
+
+  @@map("countries")
 }
 
-model system_countries {
-  id_c Int    @id @default(autoincrement()) @db.UnsignedInt
-  text String @db.VarChar(100)
+model Style {
+  id   Int    @id @default(autoincrement())
+  name String @unique @db.VarChar(100)
+
+  bands BandStyle[]
+
+  @@map("styles")
 }
 
-model system_discography {
-  id_d      Int      @id @default(autoincrement()) @db.UnsignedInt
-  interpret Int      @db.UnsignedInt
-  name      String   @db.VarChar(150)
-  type      Int      @db.TinyInt
-  info      String   @db.Text
-  vydano    String?  @db.VarChar(10)
-  naposled  DateTime @db.Date
-  obal      String   @db.VarChar(90)
-  label     String   @db.Text
-  date      DateTime @default(dbgenerated("('0000-00-00')")) @db.Date
+model Band {
+  id       Int    @id @default(autoincrement())
+  name     String @db.VarChar(250)
+  sortName String @db.VarChar(250)
 
-  @@fulltext([label], map: "label")
-  @@fulltext([name], map: "name")
+  city String? @db.VarChar(100)
+
+  formedYear  Int?
+  formedMonth Int?
+  formedDay   Int?
+
+  endedYear  Int?
+  endedMonth Int?
+  endedDay   Int?
+
+  homepage  String? @db.VarChar(255)
+  biography String  @db.LongText
+
+  countryId Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  country Country @relation(fields: [countryId], references: [id])
+
+  styles  BandStyle[]
+  members BandMember[]
+
+  @@index([name])
+  @@index([sortName])
+  @@map("bands")
 }
 
-model system_discography_recenze {
-  id_r    Int      @id @default(autoincrement()) @db.UnsignedInt
-  text    String   @db.Text
-  author  String   @db.VarChar(50)
-  napsano DateTime @db.Date
-  album   Int      @db.UnsignedInt
+model BandStyle {
+  bandId  Int
+  styleId Int
+
+  band  Band  @relation(fields: [bandId], references: [id], onDelete: Cascade)
+  style Style @relation(fields: [styleId], references: [id], onDelete: Cascade)
+
+  @@id([bandId, styleId])
+  @@map("band_styles")
 }
 
-model system_discography_tracks {
-  id_t      Int    @id @default(autoincrement()) @db.UnsignedInt
-  name      String @db.VarChar(255)
-  album     Int    @db.UnsignedInt
-  lyric     String @db.VarChar(200)
-  mp3       String @db.VarChar(200)
-  interpret Int    @db.UnsignedInt
+model Instrument {
+  id   Int    @id @default(autoincrement())
+  name String @unique @db.VarChar(100)
 
-  @@fulltext([mp3], map: "mp3")
-  @@fulltext([name], map: "name")
+  members BandMember[]
+
+  @@map("instruments")
 }
 
-model system_diskuze_prispevky {
-  id_p    Int      @id @default(autoincrement()) @db.UnsignedInt
-  jmeno   String   @db.VarChar(100)
-  text    String   @db.Text
-  date    DateTime @db.Date
-  diskuze Int      @db.UnsignedInt
+model Member {
+  id   Int    @id @default(autoincrement())
+  name String @db.VarChar(200)
+
+  birthYear  Int?
+  birthMonth Int?
+  birthDay   Int?
+
+  deathYear  Int?
+  deathMonth Int?
+  deathDay   Int?
+
+  biography String? @db.LongText
+
+  bands BandMember[]
+
+  @@index([name])
+  @@map("members")
 }
 
-model system_diskuze_temata {
-  id_d      Int      @id @default(autoincrement()) @db.UnsignedInt
-  name      String   @db.VarChar(200)
-  interpret Int      @db.UnsignedInt
-  edit      DateTime @default(dbgenerated("('0000-00-00')")) @db.Date
-}
+model BandMember {
+  id Int @id @default(autoincrement())
 
-model system_interprets {
-  id_i       Int       @id @default(autoincrement()) @db.UnsignedInt
-  name       String    @db.VarChar(250)
-  styles     String    @db.VarChar(35)
-  info       String    @db.Text
-  foto       String    @db.VarChar(100)
-  logo       String    @db.VarChar(100)
-  city       String    @db.VarChar(40)
-  date_start DateTime? @db.Date
-  date_end   DateTime? @db.Date
-  biografie  String    @db.Text
-  country    Int       @db.UnsignedInt
-  homepage   String    @db.VarChar(100)
-  date       DateTime  @default(dbgenerated("('0000-00-00')")) @db.Date
-  edit       DateTime  @default(dbgenerated("('0000-00-00')")) @db.Date
+  bandId       Int
+  memberId     Int
+  instrumentId Int
 
-  @@fulltext([biografie], map: "biografie")
-  @@fulltext([name], map: "name")
-}
+  joinedYear  Int?
+  joinedMonth Int?
+  joinedDay   Int?
 
-model system_interprets_members {
-  id_m           Int      @id @default(autoincrement()) @db.UnsignedInt
-  name           String   @db.VarChar(230)
-  instrument     String   @db.VarChar(100)
-  date_of_birth  DateTime @db.Date
-  text           String   @db.Text
-  interpret      Int
-  place_of_birth String?  @db.VarChar(100)
-  pusobeni       String?  @db.VarChar(200)
-  date_of_dead   DateTime @default(dbgenerated("('0000-00-00')")) @db.Date
-  stav           Bytes    @default(dbgenerated("('0')")) @db.Binary(1)
+  leftYear  Int?
+  leftMonth Int?
+  leftDay   Int?
 
-  @@fulltext([name], map: "name")
-  @@fulltext([text], map: "text")
-}
+  current Boolean @default(true)
 
-model system_links {
-  id_l      Int    @id @default(autoincrement()) @db.UnsignedInt
-  url       String @db.VarChar(200)
-  type      Int    @db.SmallInt
-  schvaleno Bytes  @db.Binary(1)
-}
+  displayOrder Int @default(0)
 
-model system_pressgraphy {
-  id_p      Int      @id @default(autoincrement()) @db.UnsignedInt
-  text      String   @db.Text
-  interpret Int      @db.UnsignedInt
-  update    DateTime @db.Date
-}
+  band       Band       @relation(fields: [bandId], references: [id], onDelete: Cascade)
+  member     Member     @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  instrument Instrument @relation(fields: [instrumentId], references: [id], onDelete: Restrict)
 
-model system_styles {
-  id_s Int    @id @default(autoincrement()) @db.UnsignedInt
-  text String @db.VarChar(100)
+  @@index([bandId])
+  @@index([memberId])
+  @@map("band_members")
 }

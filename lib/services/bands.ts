@@ -28,13 +28,21 @@ export async function getBand(id: number) {
     select: {
       id_i: true,
       name: true,
+
       city: true,
       country: true,
+
       styles: true,
+
       homepage: true,
+
       biografie: true,
+
       foto: true,
       logo: true,
+
+      date_start: true,
+      date_end: true,
     },
   });
 }
