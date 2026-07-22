@@ -21,3 +21,11 @@
 
 ## v1.0
 - [ ] Administration
+
+Album → Editions (různá vydání)
+Katalogová čísla u vydání
+Klikatelné labely s vlastním přehledem alb
+Klikatelné styly, země a členové
+YouTube odkazy místo MP3
+Timeline členů
+Propojení skladeb s videi a texty
