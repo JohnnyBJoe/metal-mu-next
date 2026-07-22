@@ -22,5 +22,23 @@ export async function getAlbum(id: number) {
     where: {
       id_d: id,
     },
+    select: {
+      id_d: true,
+      interpret: true,
+
+      name: true,
+      type: true,
+
+      vydano: true,
+
+      info: true,
+
+      obal: true,
+
+      label: true,
+
+      naposled: true,
+      date: true,
+    },
   });
 }

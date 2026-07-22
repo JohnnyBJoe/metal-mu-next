@@ -5,11 +5,14 @@ import type { Style } from "@/types/style";
 import type { Country } from "@/types/country";
 import type { Member } from "@/types/member";
 
+import type { MembersResult } from "@/lib/services/members";
+import BandMembers from "@/components/band/BandMembers";
+
 type CenterPanelProps = {
   band: Band | null;
   styles: Style[];
   countries: Country[];
-  members: Member[];
+  members: MembersResult;
 };
 
 export default function CenterPanel({
@@ -88,7 +91,19 @@ export default function CenterPanel({
           <div>
             <strong>Genres:</strong> {genreNames.join(", ")}
           </div>
+<div>
+  <strong>Founded:</strong>{" "}
+  {band.date_start
+    ? band.date_start.toLocaleDateString("cs-CZ")
+    : "Unknown"}
+</div>
 
+<div>
+  <strong>Disbanded:</strong>{" "}
+  {band.date_end
+    ? band.date_end.toLocaleDateString("cs-CZ")
+    : "Active"}
+</div>
           <div>
             <strong>Homepage:</strong>{" "}
             <a
@@ -105,47 +120,10 @@ export default function CenterPanel({
 
       </div>
 
-      <section className="mb-8">
-        <h2 className="mb-3 border-b border-zinc-700 pb-2 text-2xl font-semibold text-red-500">
-          Members
-        </h2>
-
-        {members.length === 0 ? (
-          <p className="text-zinc-500">No members listed.</p>
-        ) : (
-          <div className="space-y-2">
-            {members.map((member) => {
-              const active = member.stav[0] === 0;
-
-              return (
-                <div
-                  key={member.id_m}
-                  className="flex items-center justify-between rounded border border-zinc-800 bg-zinc-950 px-4 py-2"
-                >
-                  <div>
-                    <div className="font-medium text-white">
-                      {member.name}
-                    </div>
-                    <div className="text-sm text-zinc-400">
-                      {member.instrument}
-                    </div>
-                  </div>
-
-                  <span
-                    className={`rounded px-2 py-1 text-xs font-medium ${
-                      active
-                        ? "bg-green-500/20 text-green-300"
-                        : "bg-zinc-700 text-zinc-300"
-                    }`}
-                  >
-                    {active ? "Last known line-up" : "Previous member"}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </section>
+      <BandMembers
+  current={members.current}
+  previous={members.previous}
+/>
 
       <section>
         <h2 className="mb-3 border-b border-zinc-700 pb-2 text-2xl font-semibold text-red-500">

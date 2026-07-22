@@ -8,6 +8,8 @@ type Album = {
 };
 
 type RightPanelProps = {
+  bandId: number | null;
+  albumId: number | null;
   albums: Album[];
 };
 
@@ -23,6 +25,8 @@ const TYPES: Record<number, string> = {
 };
 
 export default function RightPanel({
+  bandId,
+  albumId,
   albums,
 }: RightPanelProps) {
   return (
@@ -33,12 +37,13 @@ export default function RightPanel({
       </h2>
 
       {Object.entries(TYPES).map(([type, title]) => {
-
         const list = albums.filter(
           (album) => album.type === Number(type)
         );
 
-        if (!list.length) return null;
+        if (!list.length) {
+          return null;
+        }
 
         return (
           <div key={type} className="mb-6">
@@ -49,24 +54,29 @@ export default function RightPanel({
 
             <ul className="space-y-1">
 
-              {list.map((album) => (
-                <li key={album.id_d}>
+              {list.map((album) => {
+                const active = album.id_d === albumId;
 
-                  <Link
-                    href={`/?album=${album.id_d}`}
-                    className="text-sm text-zinc-400 hover:text-red-500"
-                  >
-                    {album.vydano} {album.name}
-                  </Link>
-
-                </li>
-              ))}
+                return (
+                  <li key={album.id_d}>
+                    <Link
+                      href={`/?band=${bandId}&album=${album.id_d}`}
+                      className={
+                        active
+                          ? "text-sm font-semibold text-red-500"
+                          : "text-sm text-zinc-400 hover:text-red-500"
+                      }
+                    >
+                      {album.vydano} {album.name}
+                    </Link>
+                  </li>
+                );
+              })}
 
             </ul>
 
           </div>
         );
-
       })}
 
     </aside>
