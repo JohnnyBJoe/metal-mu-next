@@ -139,3 +139,33 @@ Links (později)
 □ Magazine Catalog
 
 □ Webzine Catalog
+
+Metal MU 2.0
+
+✅ Foundation
+
+✅ Prisma
+
+✅ Bands
+
+✅ Persons
+
+🔄 Album Credits
+
+⬜ Labels
+
+⬜ Genres
+
+⬜ Countries
+
+⬜ Studios
+
+⬜ Magazines
+
+⬜ Webzines
+
+⬜ Search 2.0
+
+⬜ Reviews
+
+⬜ Concerts

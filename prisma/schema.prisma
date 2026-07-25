@@ -97,6 +97,7 @@ model system_interprets {
 model system_interprets_members {
   id_m           Int       @id @default(autoincrement()) @db.UnsignedInt
   name           String    @db.VarChar(230)
+  real_name      String    @db.VarChar(230)
   instrument     String    @db.VarChar(100)
   date_of_birth  DateTime  @db.Date
   text           String    @db.Text
@@ -127,4 +128,18 @@ model system_pressgraphy {
 model system_styles {
   id_s Int    @id @default(autoincrement()) @db.UnsignedInt
   text String @db.VarChar(100)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model system_album_members {
+  id_am       Int    @id @default(autoincrement()) @db.UnsignedInt
+  album       Int    @db.UnsignedInt
+  member      Int?   @db.UnsignedInt
+  section     String @db.VarChar(100)
+  role        String @db.VarChar(150)
+  credited_as String @db.VarChar(200)
+  position    Int    @db.UnsignedSmallInt
+
+  @@index([album], map: "idx_album")
+  @@index([member], map: "idx_member")
 }
