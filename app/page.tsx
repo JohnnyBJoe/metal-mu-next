@@ -1,4 +1,6 @@
 import Header from "@/components/layout/Header";
+import CatalogLayout from "@/components/catalog/CatalogLayout";
+
 import LeftPanel from "@/components/layout/LeftPanel";
 import CenterPanel from "@/components/layout/CenterPanel";
 import RightPanel from "@/components/layout/RightPanel";
@@ -18,7 +20,6 @@ type HomeProps = {
 export default async function Home({
   searchParams,
 }: HomeProps) {
-
   const {
     letter = "A",
     band,
@@ -35,55 +36,41 @@ export default async function Home({
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
-
       <Header />
 
-      <div className="grid grid-cols-12 gap-4 p-4">
-
-        <div className="col-span-2">
+      <CatalogLayout
+        left={
           <LeftPanel
-  letter={letter}
-  bands={data.bands}
-/>
-        </div>
-
-        <div className="col-span-8">
-
-          {data.selectedAlbum ? (
-
+            letter={letter}
+            bands={data.bands}
+          />
+        }
+        center={
+          data.selectedAlbum ? (
             <AlbumDetail
               letter={letter}
               album={data.selectedAlbum}
               albumTracks={data.albumTracks}
               selectedTrack={data.selectedTrack}
             />
-
           ) : (
-
             <CenterPanel
               band={data.selectedBand}
               styles={data.styles}
               countries={data.countries}
               members={data.members}
             />
-
-          )}
-
-        </div>
-
-        <div className="col-span-2">
-
+          )
+        }
+        right={
           <RightPanel
             letter={letter}
             bandId={band ? Number(band) : null}
             albumId={album ? Number(album) : null}
             albums={data.discography}
           />
-
-        </div>
-
-      </div>
-
+        }
+      />
     </div>
   );
 }
