@@ -22,20 +22,30 @@ export default function Header() {
           />
 
           <MenuItem
-            title="Bands A-Z"
-            items={[
-              "A", "B", "C", "D", "E", "F", "G",
-              "H", "I", "J", "K", "L", "M",
-              "N", "O", "P", "Q", "R", "S",
-              "T", "U", "V", "W", "X", "Y", "Z",
-              "0-9",
-            ]}
-          />
+  title="Bands A-Z"
+  param="letter"
+  basePath="/"
+  items={[
+    "A", "B", "C", "D", "E", "F", "G",
+    "H", "I", "J", "K", "L", "M",
+    "N", "O", "P", "Q", "R", "S",
+    "T", "U", "V", "W", "X", "Y", "Z",
+    "0-9",
+  ]}
+/>
 
-          <MenuItem
-            title="Musicians A-Z"
-            items={["A", "B", "C", "D", "E"]}
-          />
+<MenuItem
+  title="Musicians A-Z"
+  param="letter"
+  basePath="/persons"
+  items={[
+    "A", "B", "C", "D", "E", "F", "G",
+    "H", "I", "J", "K", "L", "M",
+    "N", "O", "P", "Q", "R", "S",
+    "T", "U", "V", "W", "X", "Y", "Z",
+    "0-9",
+  ]}
+/>
 
           <MenuItem
             title="Genre"

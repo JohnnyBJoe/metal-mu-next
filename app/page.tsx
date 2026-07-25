@@ -41,7 +41,10 @@ export default async function Home({
       <div className="grid grid-cols-12 gap-4 p-4">
 
         <div className="col-span-2">
-          <LeftPanel bands={data.bands} />
+          <LeftPanel
+  letter={letter}
+  bands={data.bands}
+/>
         </div>
 
         <div className="col-span-8">

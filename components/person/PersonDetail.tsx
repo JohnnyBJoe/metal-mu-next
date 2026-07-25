@@ -1,9 +1,15 @@
+import Link from "next/link";
+
 import { formatDate } from "@/lib/helpers/dates";
 
 import type { Person } from "@/types/person";
 
+type PersonWithBand = Person & {
+  bandName: string | null;
+};
+
 type PersonDetailProps = {
-  person: Person;
+  person: PersonWithBand;
 };
 
 export default function PersonDetail({
@@ -11,13 +17,11 @@ export default function PersonDetail({
 }: PersonDetailProps) {
   return (
     <main className="rounded bg-zinc-900 p-6">
-
       <h1 className="mb-6 text-4xl font-bold text-red-500">
         {person.name}
       </h1>
 
       <div className="space-y-3 text-zinc-300">
-
         <div>
           <strong>Instrument:</strong> {person.instrument}
         </div>
@@ -39,16 +43,28 @@ export default function PersonDetail({
           {person.place_of_birth}
         </div>
 
-        <div>
-          <strong>Activity:</strong>{" "}
-          {person.pusobeni}
-        </div>
+        {person.bandName && (
+          <div>
+            <strong>Bands:</strong>{" "}
+            <Link
+              href={`/?band=${person.interpret}`}
+              className="text-red-500 hover:underline"
+            >
+              {person.bandName}
+            </Link>
 
+            {person.pusobeni && (
+              <span className="text-zinc-500">
+                {" "}
+                {person.pusobeni}
+              </span>
+            )}
+          </div>
+        )}
       </div>
 
       {person.text && (
         <section className="mt-8">
-
           <h2 className="mb-3 border-b border-zinc-700 pb-2 text-2xl font-semibold text-red-500">
             Biography
           </h2>
@@ -59,10 +75,8 @@ export default function PersonDetail({
               __html: person.text,
             }}
           />
-
         </section>
       )}
-
     </main>
   );
 }

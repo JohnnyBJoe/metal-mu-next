@@ -1,14 +1,22 @@
 "use client";
 
 import { useState } from "react";
+
 import DropdownMenu from "./DropdownMenu";
 
 type MenuItemProps = {
   title: string;
   items?: string[];
+  param?: string;
+  basePath?: string;
 };
 
-export default function MenuItem({ title, items }: MenuItemProps) {
+export default function MenuItem({
+  title,
+  items,
+  param = "letter",
+  basePath = "/",
+}: MenuItemProps) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -22,11 +30,12 @@ export default function MenuItem({ title, items }: MenuItemProps) {
       </button>
 
       {open && items && (
-  <DropdownMenu
-    items={items}
-    param={title === "Bands A-Z" ? "letter" : "menu"}
-  />
-)}
+        <DropdownMenu
+          items={items}
+          param={param}
+          basePath={basePath}
+        />
+      )}
     </div>
   );
 }

@@ -7,10 +7,14 @@ type Band = {
 };
 
 type LeftPanelProps = {
+  letter: string;
   bands: Band[];
 };
 
-export default function LeftPanel({ bands }: LeftPanelProps) {
+export default function LeftPanel({
+  letter,
+  bands,
+}: LeftPanelProps) {
   return (
     <aside className="rounded bg-zinc-900 p-4 h-[calc(100vh-110px)] overflow-y-auto">
       <h2 className="mb-4 text-lg font-semibold text-red-500">
@@ -24,7 +28,7 @@ export default function LeftPanel({ bands }: LeftPanelProps) {
             className="rounded border border-zinc-800 p-2 hover:bg-zinc-800 cursor-pointer"
           >
                         <Link
-  href={`/?letter=${band.name.charAt(0)}&band=${band.id_i}`}
+  href={`/?letter=${letter}&band=${band.id_i}`}
   className="font-semibold text-white hover:text-red-500"
 >
   {band.name}

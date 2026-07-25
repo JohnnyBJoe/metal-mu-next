@@ -93,3 +93,49 @@ Navigation
 □ Previous / Next album
 □ Previous / Next band
 □ Aktivní položky v menu
+
+====================================
+
+Jméno
+
+Foto (později)
+
+Instrument
+
+Born
+
+Birth place
+
+Current bands
+-----------------------
+
+Biography
+
+Past bands
+-----------------------
+
+Albums (později)
+
+Tracks (později)
+
+Links (později)
+
+====================================
+
+✓ Band Catalog
+
+✓ Person Catalog
+
+□ Label Catalog
+
+□ Genre Catalog
+
+□ Country Catalog
+
+□ Studio Catalog
+
+□ Festival Catalog
+
+□ Magazine Catalog
+
+□ Webzine Catalog
