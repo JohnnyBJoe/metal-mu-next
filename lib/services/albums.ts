@@ -36,9 +36,6 @@ export async function getAlbum(id: number) {
       obal: true,
 
       label: true,
-
-      naposled: true,
-      date: true,
     },
   });
 }

@@ -8,6 +8,7 @@ type Album = {
 };
 
 type RightPanelProps = {
+  letter: string;
   bandId: number | null;
   albumId: number | null;
   albums: Album[];
@@ -25,6 +26,7 @@ const TYPES: Record<number, string> = {
 };
 
 export default function RightPanel({
+  letter,
   bandId,
   albumId,
   albums,
@@ -60,7 +62,7 @@ export default function RightPanel({
                 return (
                   <li key={album.id_d}>
                     <Link
-                      href={`/?band=${bandId}&album=${album.id_d}`}
+                      href={`/?letter=${letter}&band=${bandId}&album=${album.id_d}`}
                       className={
                         active
                           ? "text-sm font-semibold text-red-500"

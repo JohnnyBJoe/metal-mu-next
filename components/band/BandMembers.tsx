@@ -3,6 +3,7 @@
 
 import type { Member } from "@/types/member";
 import { getInstrumentWeight } from "@/lib/utils/instruments";
+import Link from "next/link";
 
 type MembersProps = {
   current: Member[];
@@ -46,9 +47,12 @@ function MemberList({
             key={member.id_m}
             className="text-zinc-300"
           >
-            <span className="font-medium text-white">
-              {member.name}
-            </span>
+            <Link
+  href={`/person/${member.id_m}`}
+  className="font-medium text-white hover:text-red-500"
+>
+  {member.name}
+</Link>
 
             {" — "}
 

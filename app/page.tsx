@@ -4,93 +4,83 @@ import CenterPanel from "@/components/layout/CenterPanel";
 import RightPanel from "@/components/layout/RightPanel";
 import AlbumDetail from "@/components/album/AlbumDetail";
 
-import { prisma } from "@/lib/prisma";
-import { getBands, getBand } from "@/lib/services/bands";
-import { getAlbum, getDiscography } from "@/lib/services/albums";
-import { getMembers } from "@/lib/services/members";
-import { getTracks } from "@/lib/services/tracks";
+import { getHomeData } from "@/lib/services/home";
 
 type HomeProps = {
   searchParams: Promise<{
     letter?: string;
     band?: string;
     album?: string;
+    track?: string;
   }>;
 };
 
-export default async function Home({ searchParams }: HomeProps) {
-  const { letter = "A", band, album } = await searchParams;
+export default async function Home({
+  searchParams,
+}: HomeProps) {
 
-  const bands = await getBands(letter);
+  const {
+    letter = "A",
+    band,
+    album,
+    track,
+  } = await searchParams;
 
-  const selectedBand = band
-    ? await getBand(Number(band))
-    : null;
-
-  const members = band
-    ? await getMembers(Number(band))
-    : {
-        current: [],
-        previous: [],
-      };
-
-  const styles = await prisma.system_styles.findMany({
-    orderBy: {
-      id_s: "asc",
-    },
+  const data = await getHomeData({
+    letter,
+    band,
+    album,
+    track,
   });
-
-  const countries = await prisma.system_countries.findMany({
-    orderBy: {
-      text: "asc",
-    },
-  });
-
-  const discography = band
-    ? await getDiscography(Number(band))
-    : [];
-
-  const selectedAlbum = album
-    ? await getAlbum(Number(album))
-    : null;
-
-  const tracks = album
-    ? await getTracks(Number(album))
-    : [];
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
+
       <Header />
 
       <div className="grid grid-cols-12 gap-4 p-4">
+
         <div className="col-span-2">
-          <LeftPanel bands={bands} />
+          <LeftPanel bands={data.bands} />
         </div>
 
         <div className="col-span-8">
-          {selectedAlbum ? (
+
+          {data.selectedAlbum ? (
+
             <AlbumDetail
-              album={selectedAlbum}
-              tracks={tracks}
+              letter={letter}
+              album={data.selectedAlbum}
+              albumTracks={data.albumTracks}
+              selectedTrack={data.selectedTrack}
             />
+
           ) : (
+
             <CenterPanel
-              band={selectedBand}
-              styles={styles}
-              countries={countries}
-              members={members}
+              band={data.selectedBand}
+              styles={data.styles}
+              countries={data.countries}
+              members={data.members}
             />
+
           )}
+
         </div>
 
         <div className="col-span-2">
+
           <RightPanel
-  bandId={band ? Number(band) : null}
-  albumId={album ? Number(album) : null}
-  albums={discography}
-/>
+            letter={letter}
+            bandId={band ? Number(band) : null}
+            albumId={album ? Number(album) : null}
+            albums={data.discography}
+          />
+
+        </div>
+
       </div>
-    </div>
+
     </div>
   );
 }

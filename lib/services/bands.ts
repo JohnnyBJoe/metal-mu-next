@@ -46,3 +46,22 @@ export async function getBand(id: number) {
     },
   });
 }
+export async function getBandLetter(
+  bandId: number
+): Promise<string> {
+
+  const band = await prisma.system_interprets.findUnique({
+    where: {
+      id_i: bandId,
+    },
+    select: {
+      name: true,
+    },
+  });
+
+  if (!band) {
+    return "A";
+  }
+
+  return band.name.charAt(0).toUpperCase();
+}

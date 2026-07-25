@@ -29,3 +29,67 @@ Klikatelné styly, země a členové
 YouTube odkazy místo MP3
 Timeline členů
 Propojení skladeb s videi a texty
+
+Architecture
+
+✓ Band
+✓ Album
+□ Track
+□ Member
+□ Label
+□ Country
+□ Style
+□ Edition
+
+Module 002
+
+❌ Label
+
+↓
+
+✅ Helpers
+
+A první helper bude:
+
+normalizeLabel()
+
+Infrastructure
+
+✔ MainLayout
+✔ HomeController
+✔ Helpers
+
+Modules
+
+✔ Band
+✔ Album
+✔ Track
+
+⬜ Label
+⬜ Person
+⬜ Country
+
+
+□ Zrychlit přepínání písmen v levém panelu.
+
+Současný stav:
+Po kliknutí na písmeno někdy chvíli trvá, než lze kliknout na další.
+
+Cíl:
+Okamžitá odezva bez blokování uživatelského rozhraní.
+...
+Technical Debt
+
+□ Zrychlit přepínání písmen
+□ Přidat cache často používaných dat
+□ Optimalizovat načítání obrázků
+□ Odstranit duplicitní databázové dotazy
+□ Otestovat výkon na 10 000+ albech
+
+Navigation
+
+□ Zachovat letter při návratu z Label
+□ Breadcrumbs
+□ Previous / Next album
+□ Previous / Next band
+□ Aktivní položky v menu

@@ -13,6 +13,4 @@ export type Album = {
 
   label: string;
 
-  naposled: Date | null;
-  date: Date | null;
-};
+  };

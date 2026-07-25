@@ -4,10 +4,15 @@ import type { Album } from "@/types/album";
 import type { Track } from "@/types/track";
 
 import TrackList from "@/components/album/TrackList";
+import TrackDetail from "@/components/track/TrackDetail";
+import Link from "next/link";
+import { normalizeLabel } from "@/lib/helpers/labels";
 
 type AlbumDetailProps = {
+  letter: string;
   album: Album;
-  tracks: Track[];
+  albumTracks: Track[];
+  selectedTrack: Track | null;
 };
 
 const TYPES: Record<number, string> = {
@@ -22,8 +27,10 @@ const TYPES: Record<number, string> = {
 };
 
 export default function AlbumDetail({
+  letter,
   album,
-  tracks,
+  albumTracks,
+  selectedTrack,
 }: AlbumDetailProps) {
   return (
     <main className="rounded bg-zinc-900 p-6">
@@ -46,16 +53,29 @@ export default function AlbumDetail({
 
         <div className="flex-1 space-y-3 text-zinc-300">
           <div>
-            <strong>Released:</strong> {album.vydano ?? "Unknown"}
+            <strong>Released:</strong>{" "}
+            {album.vydano ?? "Unknown"}
           </div>
 
           <div>
-            <strong>Type:</strong> {TYPES[album.type] ?? "Other"}
+            <strong>Type:</strong>{" "}
+            {TYPES[album.type] ?? "Other"}
           </div>
 
           <div>
-            <strong>Label:</strong> {album.label || "Unknown"}
-          </div>
+  <strong>Label:</strong>{" "}
+
+  {album.label ? (
+    <Link
+      href={`/label/${encodeURIComponent(normalizeLabel(album.label))}`}
+      className="text-red-500 hover:underline"
+    >
+      {normalizeLabel(album.label)}
+    </Link>
+  ) : (
+    "Unknown"
+  )}
+</div>
         </div>
       </div>
 
@@ -74,7 +94,16 @@ export default function AlbumDetail({
         </section>
       )}
 
-      <TrackList tracks={tracks} />
+      <TrackList
+        letter={letter}
+        bandId={album.interpret}
+        albumId={album.id_d}
+        tracks={albumTracks}
+      />
+
+      {selectedTrack && (
+        <TrackDetail track={selectedTrack} />
+      )}
     </main>
   );
 }

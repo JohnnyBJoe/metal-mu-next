@@ -20,3 +20,21 @@ export async function getTracks(albumId: number) {
     },
   });
 }
+
+export async function getTrack(id: number) {
+  return prisma.system_discography_tracks.findUnique({
+    where: {
+      id_t: id,
+    },
+    select: {
+      id_t: true,
+      album: true,
+      interpret: true,
+
+      name: true,
+
+      lyric: true,
+      mp3: true,
+    },
+  });
+}

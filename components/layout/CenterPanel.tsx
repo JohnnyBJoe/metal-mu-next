@@ -94,14 +94,14 @@ export default function CenterPanel({
 <div>
   <strong>Founded:</strong>{" "}
   {band.date_start
-    ? band.date_start.toLocaleDateString("cs-CZ")
+    ? band.date_start.getFullYear()
     : "Unknown"}
 </div>
 
 <div>
   <strong>Disbanded:</strong>{" "}
   {band.date_end
-    ? band.date_end.toLocaleDateString("cs-CZ")
+    ? band.date_end.getFullYear()
     : "Active"}
 </div>
           <div>

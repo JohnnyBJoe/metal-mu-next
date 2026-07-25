@@ -1,12 +1,12 @@
 generator client {
   provider = "prisma-client-js"
-  
 }
 
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
 model system_concerts {
   id_c      Int      @id @default(autoincrement()) @db.UnsignedInt
   interpret Int
@@ -95,16 +95,16 @@ model system_interprets {
 }
 
 model system_interprets_members {
-  id_m           Int      @id @default(autoincrement()) @db.UnsignedInt
-  name           String   @db.VarChar(230)
-  instrument     String   @db.VarChar(100)
-  date_of_birth  DateTime @db.Date
-  text           String   @db.Text
+  id_m           Int       @id @default(autoincrement()) @db.UnsignedInt
+  name           String    @db.VarChar(230)
+  instrument     String    @db.VarChar(100)
+  date_of_birth  DateTime  @db.Date
+  text           String    @db.Text
   interpret      Int
-  place_of_birth String?  @db.VarChar(100)
-  pusobeni       String?  @db.VarChar(200)
-  date_of_dead   DateTime @default(dbgenerated("('0000-00-00')")) @db.Date
-  stav           Bytes    @default(dbgenerated("('0')")) @db.Binary(1)
+  place_of_birth String?   @db.VarChar(100)
+  pusobeni       String?   @db.VarChar(200)
+  date_of_dead   DateTime? @db.Date
+  stav           Bytes     @default(dbgenerated("('0')")) @db.Binary(1)
 
   @@fulltext([name], map: "name")
   @@fulltext([text], map: "text")

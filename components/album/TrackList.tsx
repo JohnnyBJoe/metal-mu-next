@@ -1,10 +1,18 @@
+import Link from "next/link";
+
 import type { Track } from "@/types/track";
 
 type TrackListProps = {
+  letter: string;
+  bandId: number;
+  albumId: number;
   tracks: Track[];
 };
 
 export default function TrackList({
+  letter,
+  bandId,
+  albumId,
   tracks,
 }: TrackListProps) {
   if (tracks.length === 0) {
@@ -27,9 +35,12 @@ export default function TrackList({
               {index + 1}.
             </span>
 
-            <span className="text-zinc-300">
+            <Link
+              href={`/?letter=${letter}&band=${bandId}&album=${albumId}&track=${track.id_t}`}
+              className="flex-1 text-zinc-300 hover:text-red-500"
+            >
               {track.name}
-            </span>
+            </Link>
           </li>
         ))}
       </ol>
