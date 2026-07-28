@@ -1,25 +1,65 @@
+import Link from "next/link";
+
+type AlbumItem = {
+  system_discography: {
+    id_d: number;
+    interpret: number;
+    name: string;
+    vydano: string | null;
+    type: number;
+  };
+};
+
 type PersonAlbumsProps = {
-  personName?: string;
+  albums: AlbumItem[];
+
+  letter: string;
+  personId?: number;
+  currentPage?: number;
 };
 
 export default function PersonAlbums({
-  personName,
+  albums,
 }: PersonAlbumsProps) {
   return (
     <aside className="rounded bg-zinc-900 p-4 h-[calc(100vh-110px)] overflow-y-auto">
-      <h2 className="mb-4 text-lg font-semibold text-red-500">
-        Albums
+
+      <h2 className="mb-2 text-2xl font-bold text-red-500">
+        Releases
       </h2>
 
-      {personName ? (
-        <p className="text-zinc-300">
-          Albums by <strong>{personName}</strong> will appear here.
+      <div className="mb-3 border-b border-zinc-700 pb-2 text-sm text-zinc-400">
+        {albums.length} releases
+      </div>
+
+      {albums.length === 0 ? (
+        <p className="text-zinc-500">
+          No releases found.
         </p>
       ) : (
-        <p className="text-zinc-500">
-          Select a musician.
-        </p>
+        <ul className="space-y-0">
+          {albums.map(({ system_discography: album }) => (
+            <li
+              key={album.id_d}
+              className="rounded px-2 py-0.5 hover:bg-zinc-800"
+            >
+              <Link
+                href={`/?band=${album.interpret}&album=${album.id_d}`}
+                className="block text-sm leading-4 text-white hover:text-red-500"
+              >
+                {album.vydano && (
+                  <span className="mr-2 text-zinc-500">
+                    {album.vydano}
+                  </span>
+                )}
+
+                {album.name}
+              </Link>
+            </li>
+          ))}
+        </ul>
       )}
+
     </aside>
   );
 }

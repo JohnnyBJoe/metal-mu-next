@@ -11,6 +11,7 @@ import { getHomeData } from "@/lib/services/home";
 type HomeProps = {
   searchParams: Promise<{
     letter?: string;
+    page?: string;
     band?: string;
     album?: string;
     track?: string;
@@ -21,7 +22,8 @@ export default async function Home({
   searchParams,
 }: HomeProps) {
   const {
-    letter = "A",
+    letter,
+    page,
     band,
     album,
     track,
@@ -29,6 +31,7 @@ export default async function Home({
 
   const data = await getHomeData({
     letter,
+    page,
     band,
     album,
     track,
@@ -36,19 +39,25 @@ export default async function Home({
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
+
       <Header />
 
       <CatalogLayout
         left={
           <LeftPanel
-            letter={letter}
+            letter={data.currentLetter}
             bands={data.bands}
+            countLabel={`${data.totalBands} bands`}
+            selectedId={band ? Number(band) : undefined}
+            currentPage={data.currentPage}
+            totalItems={data.totalBands}
           />
         }
+
         center={
           data.selectedAlbum ? (
             <AlbumDetail
-              letter={letter}
+              letter={data.currentLetter}
               album={data.selectedAlbum}
               albumTracks={data.albumTracks}
               selectedTrack={data.selectedTrack}
@@ -62,15 +71,18 @@ export default async function Home({
             />
           )
         }
+
         right={
           <RightPanel
-            letter={letter}
+            letter={data.currentLetter}
             bandId={band ? Number(band) : null}
             albumId={album ? Number(album) : null}
             albums={data.discography}
+            currentPage={data.currentPage}
           />
         }
       />
+
     </div>
   );
 }

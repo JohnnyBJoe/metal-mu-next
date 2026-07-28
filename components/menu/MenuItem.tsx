@@ -3,10 +3,13 @@
 import { useState } from "react";
 
 import DropdownMenu from "./DropdownMenu";
-
+type MenuLink = {
+  label: string;
+  href: string;
+  };
 type MenuItemProps = {
   title: string;
-  items?: string[];
+ items?: string[] | MenuLink[];
   param?: string;
   basePath?: string;
 };

@@ -169,3 +169,33 @@ Metal MU 2.0
 ⬜ Reviews
 
 ⬜ Concerts
+
+Universal Catalog Layout
+
+✔ Persons
+
+⬜ Bands
+
+⬜ Genres
+
+⬜ Countries
+
+Content Modules
+
+✔ BandDetail
+
+✔ PersonDetail
+
+⬜ GenreDetail
+
+⬜ CountryDetail
+
+Aside Modules
+
+✔ Discography
+
+⬜ PersonAlbums
+
+⬜ GenreAlbums
+
+⬜ CountryAlbums

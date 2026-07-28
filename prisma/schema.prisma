@@ -99,7 +99,7 @@ model system_interprets_members {
   name           String    @db.VarChar(230)
   real_name      String    @db.VarChar(230)
   instrument     String    @db.VarChar(100)
-  date_of_birth  DateTime  @db.Date
+  date_of_birth  DateTime? @db.Date
   text           String    @db.Text
   interpret      Int
   place_of_birth String?   @db.VarChar(100)

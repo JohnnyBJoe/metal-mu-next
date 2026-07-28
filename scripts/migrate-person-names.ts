@@ -3,7 +3,6 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 function suggestName(fullName: string): string | null {
-
   const match = fullName.match(/"(.*?)"/);
 
   if (!match) {
@@ -12,15 +11,18 @@ function suggestName(fullName: string): string | null {
 
   const nickname = match[1].trim();
 
-  // přezdívka obsahuje celé umělecké jméno
+  // přezdívka už obsahuje celé jméno
   if (nickname.includes(" ")) {
     return nickname;
   }
 
-  // vezmeme poslední slovo jako příjmení
   const clean = fullName.replace(/".*?"/, "").trim();
-
   const parts = clean.split(/\s+/);
+
+  // pokud za přezdívkou není příjmení
+  if (parts.length < 2) {
+    return nickname;
+  }
 
   const surname = parts[parts.length - 1];
 
@@ -28,7 +30,6 @@ function suggestName(fullName: string): string | null {
 }
 
 async function main() {
-
   const persons = await prisma.system_interprets_members.findMany({
     orderBy: {
       id_m: "asc",
@@ -36,29 +37,38 @@ async function main() {
     select: {
       id_m: true,
       name: true,
+      real_name: true,
     },
   });
 
-  let count = 0;
+  let updated = 0;
 
   for (const person of persons) {
-
     const suggestion = suggestName(person.name);
 
     if (!suggestion) {
       continue;
     }
 
-    count++;
-
     console.log("------------------------------------------");
-    console.log(`ID        : ${person.id_m}`);
-    console.log(`Current   : ${person.name}`);
-    console.log(`Suggested : ${suggestion}`);
+    console.log(`Updating: ${person.name}`);
+    console.log(`      -> ${suggestion}`);
+
+    await prisma.system_interprets_members.update({
+      where: {
+        id_m: person.id_m,
+      },
+      data: {
+        real_name: person.name,
+        name: suggestion,
+      },
+    });
+
+    updated++;
   }
 
   console.log("");
-  console.log(`Suggestions: ${count}`);
+  console.log(`Updated persons: ${updated}`);
 }
 
 main()
