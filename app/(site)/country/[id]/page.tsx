@@ -32,10 +32,11 @@ type Props = {
   }>;
 
   searchParams: Promise<{
-    band?: string;
-    album?: string;
-    track?: string;
-  }>;
+  page?: string;
+  band?: string;
+  album?: string;
+  track?: string;
+}>;
 };
 
 export default async function CountryPage({
@@ -48,12 +49,24 @@ export default async function CountryPage({
   const country = await getCountry(Number(id));
 
   const {
+    page,
     band,
     album,
     track,
   } = await searchParams;
 
-  const bands = await getCountryBands(Number(id));
+  const pageNumber = page ? Number(page) : 1;
+  searchParams.page
+    ? Number(searchParams.page)
+    : 1;
+
+const {
+  items: bands,
+  total,
+} = await getCountryBands(
+  Number(id),
+  pageNumber
+);
 
   const selectedBand =
     band
@@ -111,11 +124,13 @@ export default async function CountryPage({
 
         left={
           <LeftPanel
-            bands={bands}
-            baseUrl={`/country/${id}`}
-            title="Country"
-            subtitle={country?.text}
-          />
+  bands={bands}
+  baseUrl={`/country/${id}`}
+  subtitle={country?.text}
+  selectedId={band ? Number(band) : undefined}
+  currentPage={pageNumber}
+  totalItems={total}
+/>
         }
 
         center={
@@ -138,11 +153,12 @@ export default async function CountryPage({
 
         right={
           <RightPanel
-            bandId={band ? Number(band) : null}
-            albumId={album ? Number(album) : null}
-            albums={discography}
-            baseUrl={`/country/${id}`}
-          />
+  bandId={band ? Number(band) : null}
+  albumId={album ? Number(album) : null}
+  albums={discography}
+  baseUrl={`/country/${id}`}
+  currentPage={pageNumber}
+/>
         }
 
       />

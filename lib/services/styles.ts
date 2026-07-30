@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { PAGE_SIZE } from "@/lib/constants";
 
 export async function getGenres() {
   return prisma.system_styles.findMany({
@@ -16,7 +17,10 @@ export async function getGenre(id: number) {
   });
 }
 
-export async function getGenreBands(id: number) {
+export async function getGenreBands(
+  id: number,
+  page: number = 1
+) {
   const bands = await prisma.system_interprets.findMany({
     orderBy: {
       name: "asc",
@@ -33,10 +37,53 @@ export async function getGenreBands(id: number) {
     },
   });
 
-  return bands.filter((band) =>
+  const filtered = bands.filter((band) =>
     band.styles
       .split(",")
       .map(Number)
       .includes(id)
   );
+
+  return {
+    items: filtered.slice(
+      (page - 1) * PAGE_SIZE,
+      page * PAGE_SIZE
+    ),
+    total: filtered.length,
+  };
+}
+
+/**
+ * Vrátí číslo stránky kapely v seznamu žánru.
+ */
+export async function getGenreBandPage(
+  genreId: number,
+  bandId: number
+): Promise<number> {
+  const bands = await prisma.system_interprets.findMany({
+    orderBy: {
+      name: "asc",
+    },
+    select: {
+      id_i: true,
+      styles: true,
+    },
+  });
+
+  const filtered = bands.filter((band) =>
+    band.styles
+      .split(",")
+      .map(Number)
+      .includes(genreId)
+  );
+
+  const index = filtered.findIndex(
+    (b) => b.id_i === bandId
+  );
+
+  if (index < 0) {
+    return 1;
+  }
+
+  return Math.floor(index / PAGE_SIZE) + 1;
 }

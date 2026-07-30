@@ -32,6 +32,7 @@ type Props = {
   }>;
 
   searchParams: Promise<{
+    page?: string;
     band?: string;
     album?: string;
     track?: string;
@@ -48,12 +49,21 @@ export default async function GenrePage({
   const genre = await getGenre(Number(id));
 
   const {
+    page,
     band,
     album,
     track,
   } = await searchParams;
 
-  const bands = await getGenreBands(Number(id));
+
+const pageNumber = page ? Number(page) : 1;
+ const {
+  items: bands,
+  total,
+} = await getGenreBands(
+  Number(id),
+  pageNumber
+);
 
   const selectedBand =
     band
@@ -111,11 +121,13 @@ export default async function GenrePage({
 
         left={
           <LeftPanel
-            bands={bands}
-            baseUrl={`/genre/${id}`}
-            title="Genre"
-            subtitle={genre?.text}
-          />
+  bands={bands}
+  baseUrl={`/genre/${id}`}
+  subtitle={genre?.text}
+  selectedId={band ? Number(band) : undefined}
+  currentPage={pageNumber}
+  totalItems={total}
+/>
         }
 
         center={
@@ -138,11 +150,12 @@ export default async function GenrePage({
 
         right={
           <RightPanel
-            bandId={band ? Number(band) : null}
-            albumId={album ? Number(album) : null}
-            albums={discography}
-            baseUrl={`/genre/${id}`}
-          />
+  bandId={band ? Number(band) : null}
+  albumId={album ? Number(album) : null}
+  albums={discography}
+  baseUrl={`/genre/${id}`}
+  currentPage={pageNumber}
+/>
         }
 
       />
