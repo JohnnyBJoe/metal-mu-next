@@ -164,7 +164,7 @@ const allResults = [
   return (
     <div
       ref={wrapperRef}
-      className="relative w-72"
+      className="relative w-65"
     >
       <input
         type="text"

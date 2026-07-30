@@ -1,15 +1,39 @@
 import { prisma } from "@/lib/prisma";
 import { PAGE_SIZE } from "@/lib/constants";
 
-export async function getBands(
-  letter: string,
-  page: number = 1
-) {
-  const where = {
+function getBandGroup(name: string): string {
+  const first = name.charAt(0).toUpperCase();
+
+  if (/^\d$/.test(first)) {
+    return "0-9";
+  }
+
+  return first;
+}
+
+function getBandWhere(letter: string) {
+  if (letter === "0-9") {
+    return {
+      OR: Array.from({ length: 10 }, (_, i) => ({
+        name: {
+          startsWith: String(i),
+        },
+      })),
+    };
+  }
+
+  return {
     name: {
       startsWith: letter,
     },
   };
+}
+
+export async function getBands(
+  letter: string,
+  page: number = 1
+) {
+  const where = getBandWhere(letter);
 
   const [items, total] = await Promise.all([
     prisma.system_interprets.findMany({
@@ -81,7 +105,7 @@ export async function getBandLetter(
     return "A";
   }
 
-  return band.name.charAt(0).toUpperCase();
+  return getBandGroup(band.name);
 }
 
 /**
@@ -104,14 +128,10 @@ export async function getBandPage(
     return 1;
   }
 
-  const letter = band.name.charAt(0).toUpperCase();
+  const letter = getBandGroup(band.name);
 
   const bands = await prisma.system_interprets.findMany({
-    where: {
-      name: {
-        startsWith: letter,
-      },
-    },
+    where: getBandWhere(letter),
     orderBy: {
       name: "asc",
     },
