@@ -4,6 +4,34 @@ import type { Person } from "@/types/person";
 
 import { PAGE_SIZE } from "@/lib/constants";
 
+function getPersonGroup(name: string): string {
+  const first = name.charAt(0).toUpperCase();
+
+  if (/^\d$/.test(first)) {
+    return "0-9";
+  }
+
+  return first;
+}
+
+function getPersonWhere(letter: string) {
+  if (letter === "0-9") {
+    return {
+      OR: Array.from({ length: 10 }, (_, i) => ({
+        name: {
+          startsWith: String(i),
+        },
+      })),
+    };
+  }
+
+  return {
+    name: {
+      startsWith: letter,
+    },
+  };
+}
+
 export async function getPerson(
   id: number
 ): Promise<(Person & { bandName: string | null }) | null> {
@@ -48,11 +76,7 @@ export async function getPersonsByLetter(
   letter: string,
   page = 1
 ) {
-  const where = {
-    name: {
-      startsWith: letter,
-    },
-  };
+  const where = getPersonWhere(letter);
 
   const [items, total] = await Promise.all([
     prisma.system_interprets_members.findMany({
@@ -100,7 +124,7 @@ export async function getPersonLetter(
     return "A";
   }
 
-  return person.name.charAt(0).toUpperCase();
+  return getPersonGroup(person.name);
 }
 
 export async function getPersonPage(
@@ -119,14 +143,10 @@ export async function getPersonPage(
     return 1;
   }
 
-  const letter = person.name.charAt(0).toUpperCase();
+  const letter = getPersonGroup(person.name);
 
   const persons = await prisma.system_interprets_members.findMany({
-    where: {
-      name: {
-        startsWith: letter,
-      },
-    },
+    where: getPersonWhere(letter),
     orderBy: {
       name: "asc",
     },
