@@ -8,9 +8,7 @@ import TrackList from "@/components/album/TrackList";
 import TrackDetail from "@/components/track/TrackDetail";
 
 import { normalizeLabel } from "@/lib/helpers/labels";
-import AlbumLineup from "@/components/album/AlbumLineup";
-import AlbumGuests from "@/components/album/AlbumGuests";
-import { stripLineup } from "@/lib/parsers/albumInfo";
+
 
 type AlbumDetailProps = {
   letter: string;
@@ -106,16 +104,17 @@ export default function AlbumDetail({
           <div
             className="prose prose-invert max-w-none text-zinc-300"
             dangerouslySetInnerHTML={{
-              __html: stripLineup(album.info),
-            }}
+  __html: album.info,
+}}
+           
           />
 
         </section>
       )}
 
-      <AlbumLineup albumId={album.id_d} />
+      
 
-      <AlbumGuests albumId={album.id_d} />
+      
 
       <TrackList
         letter={letter}

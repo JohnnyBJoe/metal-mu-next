@@ -22,10 +22,10 @@ const TYPES: Record<number, string> = {
   1: "Studio",
   2: "Live",
   3: "Compilation",
-  4: "EP",
-  5: "Single",
-  6: "Demo",
-  7: "Video",
+  4: "Video",
+  5: "EP",
+  6: "Single",
+  7: "Demo",  
   8: "Bootleg",
 };
 

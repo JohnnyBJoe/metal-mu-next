@@ -68,6 +68,8 @@ export default async function Home({
               styles={data.styles}
               countries={data.countries}
               members={data.members}
+              letter={data.currentLetter}
+              currentPage={data.currentPage}
             />
           )
         }

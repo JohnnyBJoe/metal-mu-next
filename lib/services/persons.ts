@@ -7,7 +7,6 @@ import { PAGE_SIZE } from "@/lib/constants";
 export async function getPerson(
   id: number
 ): Promise<(Person & { bandName: string | null }) | null> {
-
   const person = await prisma.system_interprets_members.findUnique({
     where: {
       id_m: id,
@@ -49,7 +48,6 @@ export async function getPersonsByLetter(
   letter: string,
   page = 1
 ) {
-
   const where = {
     name: {
       startsWith: letter,
@@ -57,7 +55,6 @@ export async function getPersonsByLetter(
   };
 
   const [items, total] = await Promise.all([
-
     prisma.system_interprets_members.findMany({
       where,
 
@@ -79,7 +76,6 @@ export async function getPersonsByLetter(
     prisma.system_interprets_members.count({
       where,
     }),
-
   ]);
 
   return {
@@ -88,10 +84,71 @@ export async function getPersonsByLetter(
   };
 }
 
+export async function getPersonLetter(
+  personId: number
+): Promise<string> {
+  const person = await prisma.system_interprets_members.findUnique({
+    where: {
+      id_m: personId,
+    },
+    select: {
+      name: true,
+    },
+  });
+
+  if (!person) {
+    return "A";
+  }
+
+  return person.name.charAt(0).toUpperCase();
+}
+
+export async function getPersonPage(
+  personId: number
+): Promise<number> {
+  const person = await prisma.system_interprets_members.findUnique({
+    where: {
+      id_m: personId,
+    },
+    select: {
+      name: true,
+    },
+  });
+
+  if (!person) {
+    return 1;
+  }
+
+  const letter = person.name.charAt(0).toUpperCase();
+
+  const persons = await prisma.system_interprets_members.findMany({
+    where: {
+      name: {
+        startsWith: letter,
+      },
+    },
+    orderBy: {
+      name: "asc",
+    },
+    select: {
+      id_m: true,
+    },
+  });
+
+  const index = persons.findIndex(
+    (p) => p.id_m === personId
+  );
+
+  if (index === -1) {
+    return 1;
+  }
+
+  return Math.floor(index / PAGE_SIZE) + 1;
+}
+
 export async function getPersonAlbums(
   personId: number
 ) {
-
   const members = await prisma.system_album_members.findMany({
     where: {
       member: personId,
@@ -119,12 +176,12 @@ export async function getPersonAlbums(
     },
 
     select: {
-  id_d: true,
-  name: true,
-  vydano: true,
-  interpret: true,
-  type: true,
-},
+      id_d: true,
+      name: true,
+      vydano: true,
+      interpret: true,
+      type: true,
+    },
   });
 
   return members

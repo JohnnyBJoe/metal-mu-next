@@ -1,5 +1,5 @@
 // Metal MU 2.0
-// Version: v0.2
+// Version: v0.3
 
 import type { Member } from "@/types/member";
 import { getInstrumentWeight } from "@/lib/utils/instruments";
@@ -8,6 +8,9 @@ import Link from "next/link";
 type MembersProps = {
   current: Member[];
   previous: Member[];
+
+  letter: string;
+  currentPage: number;
 };
 
 function sortMembers(a: Member, b: Member) {
@@ -25,9 +28,13 @@ function sortMembers(a: Member, b: Member) {
 function MemberList({
   title,
   members,
+  letter,
+  currentPage,
 }: {
   title: string;
   members: Member[];
+  letter: string;
+  currentPage: number;
 }) {
   if (members.length === 0) {
     return null;
@@ -48,11 +55,11 @@ function MemberList({
             className="text-zinc-300"
           >
             <Link
-  href={`/person/${member.id_m}`}
-  className="font-medium text-white hover:text-red-500"
->
-  {member.name}
-</Link>
+              href={`/persons?letter=${member.letter}&page=${currentPage}&person=${member.id_m}`}
+              className="font-medium text-white hover:text-red-500"
+            >
+              {member.name}
+            </Link>
 
             {" — "}
 
@@ -78,17 +85,23 @@ function MemberList({
 export default function BandMembers({
   current,
   previous,
+  letter,
+  currentPage,
 }: MembersProps) {
   return (
     <>
       <MemberList
         title="Last known line-up"
         members={current}
+        letter={letter}
+        currentPage={currentPage}
       />
 
       <MemberList
         title="Previous members"
         members={previous}
+        letter={letter}
+        currentPage={currentPage}
       />
     </>
   );

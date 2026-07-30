@@ -12,6 +12,14 @@ type PersonDetailProps = {
   person: PersonWithBand;
 };
 
+function hasValue(value: string | null | undefined) {
+  if (!value) {
+    return false;
+  }
+
+  return value.trim().toLowerCase() !== "unknown";
+}
+
 export default function PersonDetail({
   person,
 }: PersonDetailProps) {
@@ -22,14 +30,25 @@ export default function PersonDetail({
       </h1>
 
       <div className="space-y-3 text-zinc-300">
-        <div>
-          <strong>Instrument:</strong> {person.instrument}
-        </div>
 
-        <div>
-          <strong>Born:</strong>{" "}
-          {formatDate(person.date_of_birth)}
-        </div>
+        {hasValue(person.real_name) && (
+          <div>
+            <strong>Real name:</strong> {person.real_name}
+          </div>
+        )}
+
+        {hasValue(person.instrument) && (
+          <div>
+            <strong>Instrument:</strong> {person.instrument}
+          </div>
+        )}
+
+        {person.date_of_birth && (
+          <div>
+            <strong>Born:</strong>{" "}
+            {formatDate(person.date_of_birth)}
+          </div>
+        )}
 
         {person.date_of_dead && (
           <div>
@@ -38,37 +57,38 @@ export default function PersonDetail({
           </div>
         )}
 
-        <div>
-          <strong>Birth place:</strong>{" "}
-          {person.place_of_birth}
-        </div>
-
-        {person.bandName && (
+        {hasValue(person.place_of_birth) && (
           <div>
-            <strong>Bands:</strong>{" "}
-            <Link
-              href={`/?band=${person.interpret}`}
-              className="text-red-500 hover:underline"
-            >
-              {person.bandName}
-            </Link>
-
-            {person.pusobeni && (
-              <span className="text-zinc-500">
-                {" "}
-                {person.pusobeni}
-              </span>
-            )}
+            <strong>Birth place:</strong>{" "}
+            {person.place_of_birth}
           </div>
         )}
+
+        {person.bandName && (
+  <div>
+    <strong>Bands:</strong>
+
+    <div className="mt-2 ml-4">
+      <Link
+        href={`/?band=${person.interpret}`}
+        className="block text-red-500 hover:underline"
+      >
+        {person.bandName}
+      </Link>
+
+      {person.pusobeni && (
+        <div className="text-sm text-zinc-500">
+          {person.pusobeni}
+        </div>
+      )}
+    </div>
+  </div>
+)}
+
       </div>
 
       {person.text && (
         <section className="mt-8">
-          <h2 className="mb-3 border-b border-zinc-700 pb-2 text-2xl font-semibold text-red-500">
-            Biography
-          </h2>
-
           <div
             className="prose prose-invert max-w-none text-zinc-300"
             dangerouslySetInnerHTML={{

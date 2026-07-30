@@ -1,22 +1,27 @@
-export function stripLineup(
-  info: string
-): string {
-
+export function stripLineup(info: string): string {
   const markers = [
     "Produced by",
     "Recorded at",
+    "Recorded",
+    "Recorded live",
     "Engineered by",
     "Mixed by",
+    "Remixed by",
     "Mastered by",
     "Lyrics by",
     "Music by",
-    "Cover concept",
+    "Compiled by",
     "Artwork",
     "Cover artwork",
+    "Cover concept",
     "Photography",
     "Photo",
     "Executive producer",
     "Executive Producer",
+    "Date of release",
+    "This is a concept album",
+    "Concept album",
+    "Remastered",
   ];
 
   let index = -1;
@@ -29,9 +34,11 @@ export function stripLineup(
     }
   }
 
+  // Pokud album neobsahuje žádné další informace,
+  // nechceme znovu zobrazovat HTML line-up.
   if (index === -1) {
-    return info;
+    return "";
   }
 
-  return info.substring(index);
+  return info.substring(index).trim();
 }

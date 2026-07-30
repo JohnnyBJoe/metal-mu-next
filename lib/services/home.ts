@@ -4,6 +4,7 @@ import {
   getBands,
   getBand,
   getBandLetter,
+  getBandPage,
 } from "@/lib/services/bands";
 
 import {
@@ -33,7 +34,6 @@ export async function getHomeData({
   track,
   page,
 }: HomeParams) {
-
   let currentLetter = letter;
 
   const bandId =
@@ -47,22 +47,27 @@ export async function getHomeData({
 
   currentLetter ??= "A";
 
-  const currentPage =
+  let currentPage =
     page && !Number.isNaN(Number(page))
       ? Number(page)
       : 1;
+
+  // Pokud stránka není zadána, dopočítej ji podle pozice kapely.
+  if (!page && bandId !== null) {
+    currentPage = await getBandPage(bandId);
+  }
 
   const bandData = await getBands(
     currentLetter,
     currentPage
   );
 
-  const selectedBand = band
-    ? await getBand(Number(band))
+  const selectedBand = bandId
+    ? await getBand(bandId)
     : null;
 
-  const members = band
-    ? await getMembers(Number(band))
+  const members = bandId
+    ? await getMembers(bandId)
     : {
         current: [],
         previous: [],
@@ -80,8 +85,8 @@ export async function getHomeData({
     },
   });
 
-  const discography = band
-    ? await getDiscography(Number(band))
+  const discography = bandId
+    ? await getDiscography(bandId)
     : [];
 
   const selectedAlbum = album

@@ -7,6 +7,7 @@ export type Member = {
   instrument: string;
   pusobeni: string | null;
   stav: Uint8Array;
+  letter: string;
 };
 
 export type MembersResult = {
@@ -52,11 +53,16 @@ export async function getMembers(
     },
   });
 
-  const current = members
+  const normalized = members.map((member) => ({
+    ...member,
+    letter: member.name.trim().charAt(0).toUpperCase(),
+  }));
+
+  const current = normalized
     .filter((member) => isCurrent(member.stav))
     .sort(sortMembers);
 
-  const previous = members
+  const previous = normalized
     .filter((member) => !isCurrent(member.stav))
     .sort(sortMembers);
 

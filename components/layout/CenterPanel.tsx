@@ -3,7 +3,6 @@ import Image from "next/image";
 import type { Band } from "@/types/band";
 import type { Style } from "@/types/style";
 import type { Country } from "@/types/country";
-import type { Member } from "@/types/member";
 
 import type { MembersResult } from "@/lib/services/members";
 import BandMembers from "@/components/band/BandMembers";
@@ -13,6 +12,9 @@ type CenterPanelProps = {
   styles: Style[];
   countries: Country[];
   members: MembersResult;
+
+  letter: string;
+  currentPage: number;
 };
 
 export default function CenterPanel({
@@ -20,6 +22,8 @@ export default function CenterPanel({
   styles,
   countries,
   members,
+  letter,
+  currentPage,
 }: CenterPanelProps) {
   if (!band) {
     return (
@@ -91,19 +95,21 @@ export default function CenterPanel({
           <div>
             <strong>Genres:</strong> {genreNames.join(", ")}
           </div>
-<div>
-  <strong>Founded:</strong>{" "}
-  {band.date_start
-    ? band.date_start.getFullYear()
-    : "Unknown"}
-</div>
 
-<div>
-  <strong>Disbanded:</strong>{" "}
-  {band.date_end
-    ? band.date_end.getFullYear()
-    : "Active"}
-</div>
+          <div>
+            <strong>Founded:</strong>{" "}
+            {band.date_start
+              ? band.date_start.getFullYear()
+              : "Unknown"}
+          </div>
+
+          <div>
+            <strong>Disbanded:</strong>{" "}
+            {band.date_end
+              ? band.date_end.getFullYear()
+              : "Active"}
+          </div>
+
           <div>
             <strong>Homepage:</strong>{" "}
             <a
@@ -121,9 +127,11 @@ export default function CenterPanel({
       </div>
 
       <BandMembers
-  current={members.current}
-  previous={members.previous}
-/>
+        current={members.current}
+        previous={members.previous}
+        letter={letter}
+        currentPage={currentPage}
+      />
 
       <section>
         <h2 className="mb-3 border-b border-zinc-700 pb-2 text-2xl font-semibold text-red-500">

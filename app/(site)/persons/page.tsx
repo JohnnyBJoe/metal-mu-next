@@ -6,11 +6,23 @@ import CatalogLayout from "@/components/catalog/CatalogLayout";
 import PersonSidebar from "@/components/person/PersonSidebar";
 import PersonDetail from "@/components/person/PersonDetail";
 import PersonAlbums from "@/components/person/PersonAlbums";
+import AlbumDetail from "@/components/album/AlbumDetail";
+
+import {
+  getAlbum,
+} from "@/lib/services/albums";
+
+import {
+  getTracks,
+  getTrack,
+} from "@/lib/services/tracks";
 
 import {
   getPerson,
   getPersonsByLetter,
   getPersonAlbums,
+  getPersonLetter,
+  getPersonPage,
 } from "@/lib/services/persons";
 
 type PersonsPageProps = {
@@ -18,6 +30,8 @@ type PersonsPageProps = {
     letter?: string;
     page?: string;
     person?: string;
+    album?: string;
+    track?: string;
   }>;
 };
 
@@ -26,27 +40,46 @@ export default async function PersonsPage({
 }: PersonsPageProps) {
 
   const {
-    letter = "A",
+    letter,
     page,
     person,
+    album,
+    track,
   } = await searchParams;
 
-  const currentPage =
+  const personId =
+    person && !Number.isNaN(Number(person))
+      ? Number(person)
+      : null;
+
+  let currentLetter = letter;
+
+  if (!currentLetter && personId !== null) {
+    currentLetter = await getPersonLetter(personId);
+  }
+
+  currentLetter ??= "A";
+
+  let currentPage =
     page && !Number.isNaN(Number(page))
       ? Number(page)
       : 1;
 
+  if (!page && personId !== null) {
+    currentPage = await getPersonPage(personId);
+  }
+
   const personData = await getPersonsByLetter(
-    letter,
+    currentLetter,
     currentPage
   );
 
   const selectedPerson =
-    person
-      ? await getPerson(Number(person))
+    personId
+      ? await getPerson(personId)
       : null;
 
-  if (person && !selectedPerson) {
+  if (personId && !selectedPerson) {
     notFound();
   }
 
@@ -54,6 +87,21 @@ export default async function PersonsPage({
     selectedPerson
       ? await getPersonAlbums(selectedPerson.id_m)
       : [];
+
+  const selectedAlbum =
+    album
+      ? await getAlbum(Number(album))
+      : null;
+
+  const albumTracks =
+    album
+      ? await getTracks(Number(album))
+      : [];
+
+  const selectedTrack =
+    track
+      ? await getTrack(Number(track))
+      : null;
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
@@ -63,16 +111,26 @@ export default async function PersonsPage({
       <CatalogLayout
         left={
           <PersonSidebar
-            letter={letter}
+            letter={currentLetter}
             persons={personData.items}
-            selectedId={person ? Number(person) : undefined}
+            selectedId={personId ?? undefined}
             currentPage={currentPage}
             totalItems={personData.total}
           />
         }
 
         center={
-          selectedPerson ? (
+          selectedAlbum ? (
+            <AlbumDetail
+              letter={currentLetter}
+              album={selectedAlbum}
+              albumTracks={albumTracks}
+              selectedTrack={selectedTrack}
+              baseUrl="/persons"
+              personId={personId ?? undefined}
+              currentPage={currentPage}
+            />
+          ) : selectedPerson ? (
             <PersonDetail person={selectedPerson} />
           ) : (
             <main className="rounded bg-zinc-900 p-6">
@@ -89,11 +147,12 @@ export default async function PersonsPage({
 
         right={
           <PersonAlbums
-  albums={albums}
-  letter={letter}
-  personId={person ? Number(person) : undefined}
-  currentPage={currentPage}
-/>
+            albums={albums}
+            letter={currentLetter}
+            personId={personId ?? undefined}
+            currentPage={currentPage}
+            albumId={album ? Number(album) : undefined}
+          />
         }
       />
 
