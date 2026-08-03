@@ -13,6 +13,7 @@ export type NewsItem = {
   type: NewsItemType;
   action: NewsAction;
   id: number;
+  bandId?: number;
   title: string;
   subtitle?: string;
   date: Date;
@@ -106,5 +107,97 @@ export async function getUpdatedBands(
     subtitle: countryMap.get(band.country) ?? "",
 
     date: band.edit,
+  }));
+}
+export async function getLatestAlbums(
+  limit = 10
+): Promise<NewsItem[]> {
+
+  const albums = await prisma.system_discography.findMany({
+    orderBy: {
+      date: "desc",
+    },
+
+    take: limit,
+
+    select: {
+      id_d: true,
+      interpret: true,
+      name: true,
+      date: true,
+    },
+  });
+
+  const bands = await prisma.system_interprets.findMany({
+    select: {
+      id_i: true,
+      name: true,
+    },
+  });
+
+  const bandMap = new Map<number, string>();
+
+  bands.forEach((band) => {
+    bandMap.set(band.id_i, band.name);
+  });
+
+  return albums.map((album) => ({
+    type: "album",
+    action: "new",
+
+    id: album.id_d,
+    bandId: album.interpret,
+    
+    title: album.name,
+
+    subtitle: bandMap.get(album.interpret) ?? "",
+
+    date: album.date,
+  }));
+}
+export async function getUpdatedAlbums(
+  limit = 10
+): Promise<NewsItem[]> {
+
+  const albums = await prisma.system_discography.findMany({
+    orderBy: {
+      naposled: "desc",
+    },
+
+    take: limit,
+
+    select: {
+      id_d: true,
+      interpret: true,
+      name: true,
+      naposled: true,
+    },
+  });
+
+  const bands = await prisma.system_interprets.findMany({
+    select: {
+      id_i: true,
+      name: true,
+    },
+  });
+
+  const bandMap = new Map<number, string>();
+
+  bands.forEach((band) => {
+    bandMap.set(band.id_i, band.name);
+  });
+
+  return albums.map((album) => ({
+    type: "album",
+    action: "updated",
+
+    id: album.id_d,
+    bandId: album.interpret,
+
+    title: album.name,
+
+    subtitle: bandMap.get(album.interpret) ?? "",
+
+    date: album.naposled,
   }));
 }

@@ -2,21 +2,34 @@ import Link from "next/link";
 
 import type { NewsItem } from "@/lib/services/news";
 
-type NewsListProps = {
+type Props = {
   title: string;
+  moreHref: string;
   items: NewsItem[];
 };
 
-export default function NewsList({
+export default function NewsSection({
   title,
+  moreHref,
   items,
-}: NewsListProps) {
+}: Props) {
   return (
-    <section className="rounded bg-zinc-900 p-6">
+    <section className="mt-8 rounded bg-zinc-900 p-6">
 
-      <h2 className="mb-6 text-2xl font-bold text-red-500">
-        {title}
-      </h2>
+      <div className="mb-6 flex items-center justify-between">
+
+        <h2 className="text-2xl font-bold text-red-500">
+          {title}
+        </h2>
+
+        <Link
+          href={moreHref}
+          className="text-sm text-zinc-400 hover:text-red-500"
+        >
+          More →
+        </Link>
+
+      </div>
 
       <ul className="space-y-3">
 
@@ -29,10 +42,10 @@ export default function NewsList({
 
             <Link
               href={
-  item.type === "album"
-    ? `/?band=${item.bandId}&album=${item.id}`
-    : `/?band=${item.id}`
-}
+                item.type === "album"
+                  ? `/?band=${item.bandId}&album=${item.id}`
+                  : `/?band=${item.id}`
+              }
               className="text-white hover:text-red-500"
             >
               {item.title}
