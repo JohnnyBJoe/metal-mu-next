@@ -106,6 +106,8 @@ model system_interprets_members {
   pusobeni       String?   @db.VarChar(200)
   date_of_dead   DateTime? @db.Date
   stav           Bytes     @default(dbgenerated("('0')")) @db.Binary(1)
+date DateTime @default(dbgenerated("CURRENT_TIMESTAMP")) @db.DateTime(0)
+edit DateTime @default(dbgenerated("CURRENT_TIMESTAMP")) @db.DateTime(0)
 
   @@fulltext([name], map: "name")
   @@fulltext([text], map: "text")

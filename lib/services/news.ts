@@ -201,3 +201,93 @@ export async function getUpdatedAlbums(
     date: album.naposled,
   }));
 }
+export async function getLatestMembers(
+  limit = 10
+): Promise<NewsItem[]> {
+
+  const members = await prisma.system_interprets_members.findMany({
+    orderBy: {
+      date: "desc",
+    },
+
+    take: limit,
+
+    select: {
+      id_m: true,
+      name: true,
+      interpret: true,
+      date: true,
+    },
+  });
+
+  const bands = await prisma.system_interprets.findMany({
+    select: {
+      id_i: true,
+      name: true,
+    },
+  });
+
+  const bandMap = new Map<number, string>();
+
+  bands.forEach((band) => {
+    bandMap.set(band.id_i, band.name);
+  });
+
+  return members.map((member) => ({
+    type: "musician",
+    action: "new",
+
+    id: member.id_m,
+
+    title: member.name,
+
+    subtitle: bandMap.get(member.interpret) ?? "",
+
+    date: member.date,
+  }));
+}
+export async function getUpdatedMembers(
+  limit = 10
+): Promise<NewsItem[]> {
+
+  const members = await prisma.system_interprets_members.findMany({
+    orderBy: {
+      edit: "desc",
+    },
+
+    take: limit,
+
+    select: {
+      id_m: true,
+      name: true,
+      interpret: true,
+      edit: true,
+    },
+  });
+
+  const bands = await prisma.system_interprets.findMany({
+    select: {
+      id_i: true,
+      name: true,
+    },
+  });
+
+  const bandMap = new Map<number, string>();
+
+  bands.forEach((band) => {
+    bandMap.set(band.id_i, band.name);
+  });
+
+  return members.map((member) => ({
+    type: "musician",
+    action: "updated",
+
+    id: member.id_m,
+
+    title: member.name,
+
+    subtitle: bandMap.get(member.interpret) ?? "",
+
+    date: member.edit,
+  }));
+}

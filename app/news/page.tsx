@@ -7,6 +7,8 @@ import {
   getUpdatedBands,
   getLatestAlbums,
   getUpdatedAlbums,
+  getLatestMembers,
+  getUpdatedMembers,
 } from "@/lib/services/news";
 
 export default async function NewsPage() {
@@ -16,7 +18,8 @@ export default async function NewsPage() {
 
   const albums = await getLatestAlbums(10);
   const updatedAlbums = await getUpdatedAlbums(10);
-
+  const members = await getLatestMembers(10);
+  const updatedMembers = await getUpdatedMembers(10);
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
 
@@ -51,7 +54,17 @@ export default async function NewsPage() {
           moreHref="/news/updated-releases"
           items={updatedAlbums}
         />
+<NewsSection
+  title="New Musicians"
+  moreHref="/news/new-musicians"
+  items={members}
+/>
 
+<NewsSection
+  title="Updated Musicians"
+  moreHref="/news/updated-musicians"
+  items={updatedMembers}
+/>
       </main>
 
     </div>

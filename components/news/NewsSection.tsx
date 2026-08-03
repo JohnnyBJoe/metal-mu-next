@@ -42,10 +42,12 @@ export default function NewsSection({
 
             <Link
               href={
-                item.type === "album"
-                  ? `/?band=${item.bandId}&album=${item.id}`
-                  : `/?band=${item.id}`
-              }
+  item.type === "musician"
+    ? `/persons?person=${item.id}`
+    : item.type === "album"
+      ? `/?band=${item.bandId}&album=${item.id}`
+      : `/?band=${item.id}`
+}
               className="text-white hover:text-red-500"
             >
               {item.title}
