@@ -291,3 +291,23 @@ export async function getUpdatedMembers(
     date: member.edit,
   }));
 }
+export async function getLatestNews(
+  limit = 10
+): Promise<NewsItem[]> {
+
+  const news = [
+    ...(await getLatestBands(limit)),
+    ...(await getUpdatedBands(limit)),
+    ...(await getLatestAlbums(limit)),
+    ...(await getUpdatedAlbums(limit)),
+    ...(await getLatestMembers(limit)),
+    ...(await getUpdatedMembers(limit)),
+  ];
+
+  return news
+    .sort(
+      (a, b) =>
+        b.date.getTime() - a.date.getTime()
+    )
+    .slice(0, limit);
+}

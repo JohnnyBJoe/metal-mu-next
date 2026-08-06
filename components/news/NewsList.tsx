@@ -18,43 +18,45 @@ export default function NewsList({
         {title}
       </h2>
 
-      <ul className="space-y-3">
+      <ul className="divide-y divide-zinc-800">
 
-        {items.map((item) => (
+  {items.map((item) => (
 
-          <li
-            key={item.id}
-            className="border-b border-zinc-800 pb-3"
-          >
+    <li
+      key={item.id}
+      className="flex items-center justify-between py-2"
+    >
 
-            <Link
-              href={
-    item.type === "musician"
-    ? `/persons?person=${item.id}`
-    : item.type === "album"
-      ? `/?band=${item.bandId}&album=${item.id}`
-      : `/?band=${item.id}`
-}
-              className="text-white hover:text-red-500"
-            >
-              {item.title}
-            </Link>
+      <Link
+        href={
+          item.type === "musician"
+            ? `/persons?person=${item.id}`
+            : item.type === "album"
+              ? `/bands?band=${item.bandId}&album=${item.id}`
+              : `/bands?band=${item.id}`
+        }
+        className="truncate text-white transition hover:text-red-500"
+      >
+        {item.title}
 
-            {item.subtitle && (
-              <div className="text-sm text-zinc-500">
-                {item.subtitle}
-              </div>
-            )}
+        {item.subtitle && item.subtitle !== "????" && (
+          <span className="text-zinc-500">
+            {" - "}
+            {item.subtitle}
+          </span>
+        )}
 
-            <div className="text-xs text-zinc-600">
-              {item.date.toLocaleDateString("cs-CZ")}
-            </div>
+      </Link>
 
-          </li>
+      <span className="ml-4 shrink-0 text-xs text-zinc-600">
+        {item.date.toLocaleDateString("cs-CZ")}
+      </span>
 
-        ))}
+    </li>
 
-      </ul>
+  ))}
+
+</ul>
 
     </section>
   );

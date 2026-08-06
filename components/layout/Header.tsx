@@ -4,6 +4,10 @@ import SearchBox from "@/components/search/SearchBox";
 import { getCountries } from "@/lib/services/countries";
 import { getGenres } from "@/lib/services/styles";
 
+type HeaderProps = {
+  home?: boolean;
+};
+
 export default async function Header() {
   const countries = await getCountries();
 
@@ -23,27 +27,44 @@ export default async function Header() {
     <header className="border-b border-zinc-800 bg-black">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
         <div className="text-3xl font-bold text-red-600">
-          Rock&Metal Book
-        </div>
+  Rock&amp;Metal Book
+</div>
 
         <nav className="flex gap-6">
           <MenuItem
             title="News & Updates"
             items={[
-              "New Bands",
-              "New Musicians",
-              "New Albums",
-              "New Lyrics",
-              "Updated Bands",
-              "Updated Musicians",
-              "Updated Albums",
-            ]}
+  {
+    label: "New Bands",
+    href: "/news/new-bands",
+  },
+  {
+    label: "Updated Bands",
+    href: "/news/updated-bands",
+  },
+  {
+    label: "New Releases",
+    href: "/news/new-releases",
+  },
+  {
+    label: "Updated Releases",
+    href: "/news/updated-releases",
+  },
+  {
+    label: "New Musicians",
+    href: "/news/new-musicians",
+  },
+  {
+    label: "Updated Musicians",
+    href: "/news/updated-musicians",
+  },
+]}
           />
 
           <MenuItem
             title="Bands A-Z"
             param="letter"
-            basePath="/"
+            basePath="/bands"
             items={[
               "A", "B", "C", "D", "E", "F", "G",
               "H", "I", "J", "K", "L", "M",

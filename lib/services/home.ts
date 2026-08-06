@@ -121,3 +121,25 @@ export async function getHomeData({
     selectedTrack,
   };
 }
+export async function getStatistics() {
+
+  const [
+    bands,
+    releases,
+    musicians,
+  ] = await Promise.all([
+
+    prisma.system_interprets.count(),
+
+    prisma.system_discography.count(),
+
+    prisma.system_interprets_members.count(),
+
+  ]);
+
+  return {
+    bands,
+    releases,
+    musicians,
+  };
+}

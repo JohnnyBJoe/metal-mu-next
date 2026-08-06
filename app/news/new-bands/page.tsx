@@ -1,4 +1,6 @@
 import Header from "@/components/layout/Header";
+
+import NewsMenu from "@/components/news/NewsMenu";
 import NewsList from "@/components/news/NewsList";
 
 import { getLatestBands } from "@/lib/services/news";
@@ -14,9 +16,7 @@ export default async function NewBandsPage() {
 
       <main className="mx-auto max-w-7xl px-6 py-8">
 
-        <h1 className="mb-8 text-4xl font-bold text-red-500">
-          News & Updates
-        </h1>
+        <NewsMenu active="new-bands" />
 
         <NewsList
           title="New Bands"

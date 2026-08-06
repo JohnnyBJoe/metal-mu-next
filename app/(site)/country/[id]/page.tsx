@@ -55,10 +55,9 @@ export default async function CountryPage({
     track,
   } = await searchParams;
 
-  const pageNumber = page ? Number(page) : 1;
-  searchParams.page
-    ? Number(searchParams.page)
-    : 1;
+  const pageNumber = page
+  ? Number(page)
+  : 1;
 
 const {
   items: bands,

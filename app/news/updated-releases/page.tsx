@@ -1,10 +1,11 @@
 import Header from "@/components/layout/Header";
+
+import NewsMenu from "@/components/news/NewsMenu";
 import NewsList from "@/components/news/NewsList";
 
 import { getUpdatedAlbums } from "@/lib/services/news";
 
 export default async function UpdatedReleasesPage() {
-
   const albums = await getUpdatedAlbums(100);
 
   return (
@@ -14,9 +15,7 @@ export default async function UpdatedReleasesPage() {
 
       <main className="mx-auto max-w-7xl px-6 py-8">
 
-        <h1 className="mb-8 text-4xl font-bold text-red-500">
-          News & Updates
-        </h1>
+        <NewsMenu active="updated-releases" />
 
         <NewsList
           title="Updated Releases"
