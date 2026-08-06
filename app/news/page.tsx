@@ -19,7 +19,7 @@ export default async function NewsPage() {
         <NewsMenu active="all" />
 
         <NewsList
-  title="All Updates"
+  title="All News&Updates"
   items={news}
 />
 

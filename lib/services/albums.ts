@@ -130,3 +130,28 @@ export async function getAlbumGuests(
       ) ?? null,
   }));
 }
+export async function getLatestAlbumCovers(
+  limit: number = 6
+) {
+  return prisma.system_discography.findMany({
+  where: {
+    obal: {
+      not: "",
+    },
+  },
+
+  orderBy: {
+    date: "desc",
+  },
+
+  take: limit,
+
+  select: {
+    id_d: true,
+    interpret: true,
+    name: true,
+    vydano: true,
+    obal: true,
+  },
+});
+}

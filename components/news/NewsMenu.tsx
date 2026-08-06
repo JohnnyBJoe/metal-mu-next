@@ -7,7 +7,7 @@ type Props = {
 const items = [
   {
   id: "all",
-  title: "All Updates",
+  title: "All News&Updates",
   href: "/news",
 },
 {

@@ -52,7 +52,6 @@ export async function getHomeData({
       ? Number(page)
       : 1;
 
-  // Pokud stránka není zadána, dopočítej ji podle pozice kapely.
   if (!page && bandId !== null) {
     currentPage = await getBandPage(bandId);
   }
@@ -121,6 +120,7 @@ export async function getHomeData({
     selectedTrack,
   };
 }
+
 export async function getStatistics() {
 
   const [
@@ -134,6 +134,54 @@ export async function getStatistics() {
     prisma.system_discography.count(),
 
     prisma.system_interprets_members.count(),
+
+  ]);
+
+  return {
+    bands,
+    releases,
+    musicians,
+  };
+}
+
+export async function getTodayActivity() {
+
+  const today = new Date();
+
+  today.setHours(0, 0, 0, 0);
+
+  const [
+    bands,
+    releases,
+    musicians,
+  ] = await Promise.all([
+
+    prisma.system_interprets.count({
+      where: {
+        OR: [
+          { date: { gte: today } },
+          { edit: { gte: today } },
+        ],
+      },
+    }),
+
+    prisma.system_discography.count({
+      where: {
+        OR: [
+          { date: { gte: today } },
+          { naposled: { gte: today } },
+        ],
+      },
+    }),
+
+    prisma.system_interprets_members.count({
+      where: {
+        OR: [
+          { date: { gte: today } },
+          { edit: { gte: today } },
+        ],
+      },
+    }),
 
   ]);
 

@@ -15,7 +15,7 @@ export default function LatestNews({
       <div className="mb-4 flex items-center justify-between">
 
         <h2 className="text-xl font-bold text-red-500">
-          Latest Updates
+          Latest News&Updates
         </h2>
 
         <Link

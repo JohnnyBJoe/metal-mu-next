@@ -1,3 +1,4 @@
+
 import { prisma } from "@/lib/prisma";
 import { PAGE_SIZE } from "@/lib/constants";
 
@@ -147,4 +148,85 @@ export async function getBandPage(
   }
 
   return Math.floor(index / PAGE_SIZE) + 1;
+}
+export async function getFeaturedBand() {
+
+  const band = await prisma.system_interprets.findFirst({
+    orderBy: {
+      date: "desc",
+    },
+
+    select: {
+      id_i: true,
+      name: true,
+
+      country: true,
+      styles: true,
+
+      date_start: true,
+
+      biografie: true,
+
+      logo: true,
+      foto: true,
+    },
+  });
+
+  if (!band) {
+    return null;
+  }
+
+  const country = await prisma.system_countries.findUnique({
+    where: {
+      id_c: band.country ?? 0,
+    },
+    select: {
+      text: true,
+    },
+  });
+
+  let styles = "";
+
+  if (band.styles) {
+
+    const ids = band.styles
+      .split(",")
+      .map((id) => Number(id.trim()))
+      .filter((id) => !Number.isNaN(id));
+
+    const styleItems = await prisma.system_styles.findMany({
+      where: {
+        id_s: {
+          in: ids,
+        },
+      },
+      orderBy: {
+        id_s: "asc",
+      },
+      select: {
+        text: true,
+      },
+    });
+
+    styles = styleItems
+      .map((style) => style.text)
+      .join(", ");
+  }
+
+  return {
+    id_i: band.id_i,
+
+    name: band.name,
+
+    country: country?.text ?? "",
+
+    styles,
+
+    date_start: band.date_start,
+
+    biografie: band.biografie,
+
+    logo: band.logo,
+    foto: band.foto,
+  };
 }

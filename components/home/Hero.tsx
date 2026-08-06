@@ -6,10 +6,17 @@ type HeroProps = {
     releases: number;
     musicians: number;
   };
+
+  activity: {
+    bands: number;
+    releases: number;
+    musicians: number;
+  };
 };
 
 export default function Hero({
   statistics,
+  activity,
 }: HeroProps) {
   return (
     <section className="overflow-hidden rounded-xl border border-zinc-800 bg-gradient-to-b from-zinc-900 via-zinc-900 to-black">
@@ -57,7 +64,17 @@ export default function Hero({
           </div>
 
           <div className="mt-2 text-sm text-white">
-            5 new bands • 12 updated releases • 3 new musicians
+
+            {activity.bands} Bands
+
+            <span className="mx-2 text-zinc-500">•</span>
+
+            {activity.releases} Releases
+
+            <span className="mx-2 text-zinc-500">•</span>
+
+            {activity.musicians} Musicians
+
           </div>
 
         </div>
@@ -73,10 +90,10 @@ export default function Hero({
           </Link>
 
           <Link
-            href="/news"
-            className="font-semibold text-zinc-300 transition hover:text-red-500"
+            href="/persons?letter=A"
+            className="rounded border border-zinc-700 px-6 py-3 font-semibold text-zinc-300 transition hover:border-red-600 hover:text-white"
           >
-            Latest Updates →
+            Explore Musicians
           </Link>
 
         </div>
