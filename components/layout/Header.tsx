@@ -8,7 +8,10 @@ type HeaderProps = {
   home?: boolean;
 };
 
-export default async function Header() {
+export default async function Header({
+  home = false,
+}: HeaderProps) {
+
   const countries = await getCountries();
 
   const countryItems = countries.map((country) => ({
@@ -25,40 +28,51 @@ export default async function Header() {
 
   return (
     <header className="border-b border-zinc-800 bg-black">
+
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
-        <div className="text-3xl font-bold text-red-600">
-  Rock&amp;Metal Book
-</div>
+
+        <div className="w-56">
+
+          {!home && (
+
+            <div className="text-3xl font-bold text-red-600">
+              Rock&amp;Metal Book
+            </div>
+
+          )}
+
+        </div>
 
         <nav className="flex gap-6">
+
           <MenuItem
             title="News & Updates"
             items={[
-  {
-    label: "New Bands",
-    href: "/news/new-bands",
-  },
-  {
-    label: "Updated Bands",
-    href: "/news/updated-bands",
-  },
-  {
-    label: "New Releases",
-    href: "/news/new-releases",
-  },
-  {
-    label: "Updated Releases",
-    href: "/news/updated-releases",
-  },
-  {
-    label: "New Musicians",
-    href: "/news/new-musicians",
-  },
-  {
-    label: "Updated Musicians",
-    href: "/news/updated-musicians",
-  },
-]}
+              {
+                label: "New Bands",
+                href: "/news/new-bands",
+              },
+              {
+                label: "Updated Bands",
+                href: "/news/updated-bands",
+              },
+              {
+                label: "New Releases",
+                href: "/news/new-releases",
+              },
+              {
+                label: "Updated Releases",
+                href: "/news/updated-releases",
+              },
+              {
+                label: "New Musicians",
+                href: "/news/new-musicians",
+              },
+              {
+                label: "Updated Musicians",
+                href: "/news/updated-musicians",
+              },
+            ]}
           />
 
           <MenuItem
@@ -70,7 +84,7 @@ export default async function Header() {
               "H", "I", "J", "K", "L", "M",
               "N", "O", "P", "Q", "R", "S",
               "T", "U", "V", "W", "X", "Y", "Z",
-              "0-9","#",
+              "0-9", "#",
             ]}
           />
 
@@ -106,10 +120,13 @@ export default async function Header() {
               "Studios",
             ]}
           />
+
         </nav>
 
         <SearchBox />
+
       </div>
+
     </header>
   );
 }

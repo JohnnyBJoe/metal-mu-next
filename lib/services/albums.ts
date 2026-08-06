@@ -133,25 +133,53 @@ export async function getAlbumGuests(
 export async function getLatestAlbumCovers(
   limit: number = 6
 ) {
-  return prisma.system_discography.findMany({
-  where: {
-    obal: {
-      not: "",
+
+  const albums = await prisma.system_discography.findMany({
+    where: {
+      obal: {
+        not: "",
+      },
     },
-  },
 
-  orderBy: {
-    date: "desc",
-  },
+    orderBy: {
+      date: "desc",
+    },
 
-  take: limit,
+    take: limit,
 
-  select: {
-    id_d: true,
-    interpret: true,
-    name: true,
-    vydano: true,
-    obal: true,
-  },
-});
+    select: {
+      id_d: true,
+      interpret: true,
+      name: true,
+      vydano: true,
+      obal: true,
+    },
+  });
+
+  const bandIds = albums.map((album) => album.interpret);
+
+  const bands = await prisma.system_interprets.findMany({
+    where: {
+      id_i: {
+        in: bandIds,
+      },
+    },
+
+    select: {
+      id_i: true,
+      name: true,
+    },
+  });
+
+  const bandMap = new Map(
+    bands.map((band) => [
+      band.id_i,
+      band.name,
+    ])
+  );
+
+  return albums.map((album) => ({
+    ...album,
+    band: bandMap.get(album.interpret) ?? "",
+  }));
 }

@@ -149,7 +149,7 @@ export async function getBandPage(
 
   return Math.floor(index / PAGE_SIZE) + 1;
 }
-export async function getFeaturedBand() {
+export async function getBandOfTheDay() {
 
   const band = await prisma.system_interprets.findFirst({
     orderBy: {
@@ -209,8 +209,9 @@ export async function getFeaturedBand() {
     });
 
     styles = styleItems
-      .map((style) => style.text)
-      .join(", ");
+  .slice(0, 3)
+  .map((style) => style.text)
+  .join(" • ");
   }
 
   return {

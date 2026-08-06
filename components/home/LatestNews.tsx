@@ -10,12 +10,12 @@ export default function LatestNews({
   items,
 }: Props) {
   return (
-    <section className="rounded-xl border border-zinc-800 bg-zinc-900 p-6">
+    <section className="rounded-xl border border-zinc-800 bg-zinc-900 p-5">
 
-      <div className="mb-4 flex items-center justify-between">
+      <div className="mb-3 flex items-center justify-between">
 
         <h2 className="text-xl font-bold text-red-500">
-          Latest News&Updates
+          Latest News & Updates
         </h2>
 
         <Link
@@ -33,16 +33,16 @@ export default function LatestNews({
 
           <li
             key={`${item.type}-${item.id}`}
-            className="flex items-center justify-between py-2"
+            className="flex items-center justify-between py-1.5"
           >
 
-            <div className="flex items-center gap-3">
+            <div className="flex min-w-0 items-center gap-2.5">
 
               <span
                 className={
                   item.action === "new"
-                    ? "h-2.5 w-2.5 rounded-full bg-red-500"
-                    : "h-2.5 w-2.5 rounded-full bg-zinc-500"
+                    ? "h-2 w-2 rounded-full bg-red-500"
+                    : "h-2 w-2 rounded-full bg-zinc-500"
                 }
               />
 
@@ -54,7 +54,7 @@ export default function LatestNews({
                       ? `/bands?band=${item.bandId}&album=${item.id}`
                       : `/?band=${item.id}`
                 }
-                className="text-sm text-white transition hover:text-red-500"
+                className="truncate text-sm text-white transition hover:text-red-500"
               >
                 {item.title}
 
@@ -69,7 +69,7 @@ export default function LatestNews({
 
             </div>
 
-            <span className="text-xs text-zinc-500">
+            <span className="ml-4 shrink-0 text-[11px] text-zinc-600">
               {item.date.toLocaleDateString("cs-CZ")}
             </span>
 

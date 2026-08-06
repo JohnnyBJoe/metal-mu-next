@@ -2,14 +2,11 @@ import Header from "@/components/layout/Header";
 
 import Hero from "@/components/home/Hero";
 import LatestNews from "@/components/home/LatestNews";
-import FeaturedBand from "@/components/home/FeaturedBand";
-
-import { getLatestNews } from "@/lib/services/news";
+import BandOfTheDay from "@/components/home/BandOfTheDay";
 import LatestReleases from "@/components/home/LatestReleases";
 
-import {
-  getLatestAlbumCovers,
-} from "@/lib/services/albums";
+import { getLatestNews } from "@/lib/services/news";
+import { getLatestAlbumCovers } from "@/lib/services/albums";
 
 import {
   getStatistics,
@@ -17,35 +14,28 @@ import {
 } from "@/lib/services/home";
 
 import {
-  getFeaturedBand,
+  getBandOfTheDay,
 } from "@/lib/services/bands";
 
 export default async function HomePage() {
-
   const [
     news,
     statistics,
     activity,
-    featuredBand,
+    bandOfTheDay,
     latestAlbums,
   ] = await Promise.all([
-
     getLatestNews(8),
-
     getStatistics(),
-
     getTodayActivity(),
-
-    getFeaturedBand(),
-
-    getLatestAlbumCovers(),
-
+    getBandOfTheDay(),
+    getLatestAlbumCovers(5),
   ]);
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
 
-      <Header />
+      <Header home />
 
       <main className="mx-auto max-w-7xl space-y-8 px-6 py-8">
 
@@ -58,13 +48,17 @@ export default async function HomePage() {
           items={news}
         />
 
-        <FeaturedBand
-          band={featuredBand}
-        />
+        <div className="grid gap-8 xl:grid-cols-[1fr_1.35fr]">
 
-        <LatestReleases
-  items={latestAlbums}
-/>
+          <BandOfTheDay
+            band={bandOfTheDay}
+          />
+
+          <LatestReleases
+            items={latestAlbums}
+          />
+
+        </div>
 
       </main>
 

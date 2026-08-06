@@ -6,6 +6,7 @@ type Release = {
   interpret: number;
   name: string;
   obal: string | null;
+  band: string;
 };
 
 type Props = {
@@ -33,13 +34,13 @@ export default function LatestReleases({
 
       </div>
 
-      <div className="grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-6">
+     <div className="grid grid-cols-2 gap-6 md:grid-cols-3 xl:grid-cols-6">
 
         {items.map((album) => (
 
           <Link
             key={album.id_d}
-            href={`/bands?album=${album.id_d}`}
+            href={`/bands?band=${album.interpret}&album=${album.id_d}`}
             className="group"
           >
 
@@ -65,7 +66,9 @@ export default function LatestReleases({
               {album.name}
 
             </div>
-
+<div className="mt-1 text-sm text-zinc-500">
+  {album.band}
+</div>
           </Link>
 
         ))}

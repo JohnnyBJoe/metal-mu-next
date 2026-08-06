@@ -4,9 +4,8 @@ type FeaturedBandProps = {
   band: {
     id_i: number;
     name: string;
-    city: string | null;
-    country: number | null;
-    styles: string | null;
+    country: string;
+    styles: string;
     date_start: number | null;
     biografie: string | null;
   } | null;
@@ -23,21 +22,18 @@ export default function FeaturedBand({
   const biography =
     band.biografie
       ?.replace(/<[^>]+>/g, "")
+      .replace(/\s+/g, " ")
       .trim()
-      .slice(0, 260);
+      .slice(0, 140);
 
   return (
     <section className="rounded-xl border border-zinc-800 bg-zinc-900 p-6">
 
-      <div className="mb-4 flex items-center gap-2">
+      <div className="mb-4">
 
-        <span className="text-xl">
-          ⭐
+        <span className="rounded bg-red-700 px-2 py-1 text-xs font-bold uppercase tracking-wider text-white">
+          Band Of The Day
         </span>
-
-        <h2 className="text-xl font-bold text-red-500">
-          Featured Band
-        </h2>
 
       </div>
 
@@ -47,8 +43,8 @@ export default function FeaturedBand({
 
       <div className="mt-2 text-sm text-zinc-400">
 
-        {band.city && (
-          <span>{band.city}</span>
+        {band.country && (
+          <span>{band.country}</span>
         )}
 
         {band.styles && (
@@ -70,10 +66,8 @@ export default function FeaturedBand({
       {biography && (
 
         <p className="mt-5 leading-7 text-zinc-300">
-
           {biography}
           ...
-
         </p>
 
       )}
