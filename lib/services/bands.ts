@@ -1,4 +1,3 @@
-
 import { prisma } from "@/lib/prisma";
 import { PAGE_SIZE } from "@/lib/constants";
 
@@ -9,7 +8,11 @@ function getBandGroup(name: string): string {
     return "0-9";
   }
 
-  return first;
+  if (/^[A-Z]$/.test(first)) {
+    return first;
+  }
+
+  return "#";
 }
 
 function getBandWhere(letter: string) {
@@ -20,6 +23,34 @@ function getBandWhere(letter: string) {
           startsWith: String(i),
         },
       })),
+    };
+  }
+
+  if (letter === "#") {
+    const alphanumericStarts = [
+      ...Array.from({ length: 10 }, (_, i) =>
+        String(i)
+      ),
+      ..."ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""),
+    ];
+
+    return {
+      AND: [
+        {
+          name: {
+            not: "",
+          },
+        },
+        {
+          NOT: {
+            OR: alphanumericStarts.map((char) => ({
+              name: {
+                startsWith: char,
+              },
+            })),
+          },
+        },
+      ],
     };
   }
 
@@ -141,7 +172,9 @@ export async function getBandPage(
     },
   });
 
-  const index = bands.findIndex((b) => b.id_i === bandId);
+  const index = bands.findIndex(
+    (b) => b.id_i === bandId
+  );
 
   if (index < 0) {
     return 1;
@@ -149,8 +182,8 @@ export async function getBandPage(
 
   return Math.floor(index / PAGE_SIZE) + 1;
 }
-export async function getBandOfTheDay() {
 
+export async function getBandOfTheDay() {
   const band = await prisma.system_interprets.findFirst({
     orderBy: {
       date: "desc",
@@ -188,30 +221,30 @@ export async function getBandOfTheDay() {
   let styles = "";
 
   if (band.styles) {
-
     const ids = band.styles
       .split(",")
       .map((id) => Number(id.trim()))
       .filter((id) => !Number.isNaN(id));
 
-    const styleItems = await prisma.system_styles.findMany({
-      where: {
-        id_s: {
-          in: ids,
+    const styleItems =
+      await prisma.system_styles.findMany({
+        where: {
+          id_s: {
+            in: ids,
+          },
         },
-      },
-      orderBy: {
-        id_s: "asc",
-      },
-      select: {
-        text: true,
-      },
-    });
+        orderBy: {
+          id_s: "asc",
+        },
+        select: {
+          text: true,
+        },
+      });
 
     styles = styleItems
-  .slice(0, 3)
-  .map((style) => style.text)
-  .join(" • ");
+      .slice(0, 3)
+      .map((style) => style.text)
+      .join(" • ");
   }
 
   return {

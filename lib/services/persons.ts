@@ -11,7 +11,11 @@ function getPersonGroup(name: string): string {
     return "0-9";
   }
 
-  return first;
+  if (/^[A-Z]$/.test(first)) {
+    return first;
+  }
+
+  return "#";
 }
 
 function getPersonWhere(letter: string) {
@@ -25,6 +29,34 @@ function getPersonWhere(letter: string) {
     };
   }
 
+  if (letter === "#") {
+    const alphanumericStarts = [
+      ...Array.from({ length: 10 }, (_, i) =>
+        String(i)
+      ),
+      ..."ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""),
+    ];
+
+    return {
+      AND: [
+        {
+          name: {
+            not: "",
+          },
+        },
+        {
+          NOT: {
+            OR: alphanumericStarts.map((char) => ({
+              name: {
+                startsWith: char,
+              },
+            })),
+          },
+        },
+      ],
+    };
+  }
+
   return {
     name: {
       startsWith: letter,
@@ -34,37 +66,41 @@ function getPersonWhere(letter: string) {
 
 export async function getPerson(
   id: number
-): Promise<(Person & { bandName: string | null }) | null> {
-  const person = await prisma.system_interprets_members.findUnique({
-    where: {
-      id_m: id,
-    },
-    select: {
-      id_m: true,
-      name: true,
-      instrument: true,
-      date_of_birth: true,
-      date_of_dead: true,
-      place_of_birth: true,
-      text: true,
-      interpret: true,
-      pusobeni: true,
-      stav: true,
-    },
-  });
+): Promise<
+  (Person & { bandName: string | null }) | null
+> {
+  const person =
+    await prisma.system_interprets_members.findUnique({
+      where: {
+        id_m: id,
+      },
+      select: {
+        id_m: true,
+        name: true,
+        instrument: true,
+        date_of_birth: true,
+        date_of_dead: true,
+        place_of_birth: true,
+        text: true,
+        interpret: true,
+        pusobeni: true,
+        stav: true,
+      },
+    });
 
   if (!person) {
     return null;
   }
 
-  const band = await prisma.system_interprets.findUnique({
-    where: {
-      id_i: person.interpret,
-    },
-    select: {
-      name: true,
-    },
-  });
+  const band =
+    await prisma.system_interprets.findUnique({
+      where: {
+        id_i: person.interpret,
+      },
+      select: {
+        name: true,
+      },
+    });
 
   return {
     ...person,
@@ -111,14 +147,15 @@ export async function getPersonsByLetter(
 export async function getPersonLetter(
   personId: number
 ): Promise<string> {
-  const person = await prisma.system_interprets_members.findUnique({
-    where: {
-      id_m: personId,
-    },
-    select: {
-      name: true,
-    },
-  });
+  const person =
+    await prisma.system_interprets_members.findUnique({
+      where: {
+        id_m: personId,
+      },
+      select: {
+        name: true,
+      },
+    });
 
   if (!person) {
     return "A";
@@ -130,14 +167,15 @@ export async function getPersonLetter(
 export async function getPersonPage(
   personId: number
 ): Promise<number> {
-  const person = await prisma.system_interprets_members.findUnique({
-    where: {
-      id_m: personId,
-    },
-    select: {
-      name: true,
-    },
-  });
+  const person =
+    await prisma.system_interprets_members.findUnique({
+      where: {
+        id_m: personId,
+      },
+      select: {
+        name: true,
+      },
+    });
 
   if (!person) {
     return 1;
@@ -145,15 +183,16 @@ export async function getPersonPage(
 
   const letter = getPersonGroup(person.name);
 
-  const persons = await prisma.system_interprets_members.findMany({
-    where: getPersonWhere(letter),
-    orderBy: {
-      name: "asc",
-    },
-    select: {
-      id_m: true,
-    },
-  });
+  const persons =
+    await prisma.system_interprets_members.findMany({
+      where: getPersonWhere(letter),
+      orderBy: {
+        name: "asc",
+      },
+      select: {
+        id_m: true,
+      },
+    });
 
   const index = persons.findIndex(
     (p) => p.id_m === personId
@@ -169,40 +208,42 @@ export async function getPersonPage(
 export async function getPersonAlbums(
   personId: number
 ) {
-  const members = await prisma.system_album_members.findMany({
-    where: {
-      member: personId,
-    },
+  const members =
+    await prisma.system_album_members.findMany({
+      where: {
+        member: personId,
+      },
 
-    orderBy: {
-      position: "asc",
-    },
+      orderBy: {
+        position: "asc",
+      },
 
-    select: {
-      album: true,
-      position: true,
-    },
-  });
+      select: {
+        album: true,
+        position: true,
+      },
+    });
 
   if (members.length === 0) {
     return [];
   }
 
-  const albums = await prisma.system_discography.findMany({
-    where: {
-      id_d: {
-        in: members.map((m) => m.album),
+  const albums =
+    await prisma.system_discography.findMany({
+      where: {
+        id_d: {
+          in: members.map((m) => m.album),
+        },
       },
-    },
 
-    select: {
-      id_d: true,
-      name: true,
-      vydano: true,
-      interpret: true,
-      type: true,
-    },
-  });
+      select: {
+        id_d: true,
+        name: true,
+        vydano: true,
+        interpret: true,
+        type: true,
+      },
+    });
 
   return members
     .map((member) => ({

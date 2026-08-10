@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 
 import type { Album } from "@/types/album";
 import type { Track } from "@/types/track";
@@ -8,7 +7,6 @@ import TrackList from "@/components/album/TrackList";
 import TrackDetail from "@/components/track/TrackDetail";
 
 import { normalizeLabel } from "@/lib/helpers/labels";
-
 
 type AlbumDetailProps = {
   letter: string;
@@ -37,7 +35,6 @@ export default function AlbumDetail({
   album,
   albumTracks,
   selectedTrack,
-
   baseUrl = "/",
   personId,
   currentPage = 1,
@@ -52,6 +49,7 @@ export default function AlbumDetail({
       <div className="flex gap-8">
 
         <div className="w-64 flex-shrink-0">
+
           {album.obal && (
             <Image
               src={`/cover/${album.obal}`}
@@ -61,34 +59,33 @@ export default function AlbumDetail({
               className="rounded"
             />
           )}
+
         </div>
 
         <div className="flex-1 space-y-3 text-zinc-300">
 
-          <div>
-            <strong>Released:</strong>{" "}
-            {album.vydano ?? "Unknown"}
-          </div>
+          {album.vydano && (
+            <div>
+              <strong>Released:</strong>{" "}
+              {album.vydano}
+            </div>
+          )}
 
-          <div>
-            <strong>Type:</strong>{" "}
-            {TYPES[album.type] ?? "Other"}
-          </div>
+          {album.type && (
+            <div>
+              <strong>Type:</strong>{" "}
+              {TYPES[album.type] ?? "Other"}
+            </div>
+          )}
 
-          <div>
-            <strong>Label:</strong>{" "}
-
-            {album.label ? (
-              <Link
-                href={`/label/${encodeURIComponent(normalizeLabel(album.label))}`}
-                className="text-red-500 hover:underline"
-              >
+          {album.label && normalizeLabel(album.label) && (
+            <div>
+              <strong>Label:</strong>{" "}
+              <span className="text-zinc-300">
                 {normalizeLabel(album.label)}
-              </Link>
-            ) : (
-              "Unknown"
-            )}
-          </div>
+              </span>
+            </div>
+          )}
 
         </div>
 
@@ -104,24 +101,18 @@ export default function AlbumDetail({
           <div
             className="prose prose-invert max-w-none text-zinc-300"
             dangerouslySetInnerHTML={{
-  __html: album.info,
-}}
-           
+              __html: album.info,
+            }}
           />
 
         </section>
       )}
-
-      
-
-      
 
       <TrackList
         letter={letter}
         bandId={album.interpret}
         albumId={album.id_d}
         tracks={albumTracks}
-
         baseUrl={baseUrl}
         personId={personId}
         currentPage={currentPage}
