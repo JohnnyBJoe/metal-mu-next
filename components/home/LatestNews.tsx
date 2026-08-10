@@ -27,13 +27,13 @@ export default function LatestNews({
 
       </div>
 
-      <ul className="divide-y divide-zinc-800">
+      <ul className="grid grid-cols-1 gap-x-6 md:grid-cols-2">
 
         {items.map((item) => (
 
           <li
             key={`${item.type}-${item.id}`}
-            className="flex items-center justify-between py-1.5"
+            className="flex items-center justify-between border-b border-zinc-800 py-1.5"
           >
 
             <div className="flex min-w-0 items-center gap-2.5">
@@ -41,8 +41,8 @@ export default function LatestNews({
               <span
                 className={
                   item.action === "new"
-                    ? "h-2 w-2 rounded-full bg-red-500"
-                    : "h-2 w-2 rounded-full bg-zinc-500"
+                    ? "h-2 w-2 shrink-0 rounded-full bg-red-500"
+                    : "h-2 w-2 shrink-0 rounded-full bg-zinc-500"
                 }
               />
 
