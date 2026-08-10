@@ -62,25 +62,29 @@ export async function getAlbumLineup(
     return [];
   }
 
-  const persons = await prisma.system_interprets_members.findMany({
-    where: {
-      id_m: {
-        in: lineup
-          .map((item) => item.member)
-          .filter((id): id is number => id !== null),
+  const persons =
+    await prisma.system_interprets_members.findMany({
+      where: {
+        id_m: {
+          in: lineup
+            .map((item) => item.member)
+            .filter(
+              (id): id is number => id !== null
+            ),
+        },
       },
-    },
-    select: {
-      id_m: true,
-      name: true,
-    },
-  });
+      select: {
+        id_m: true,
+        name: true,
+      },
+    });
 
   return lineup.map((item) => ({
     ...item,
     person:
       persons.find(
-        (person) => person.id_m === item.member
+        (person) =>
+          person.id_m === item.member
       ) ?? null,
   }));
 }
@@ -108,68 +112,76 @@ export async function getAlbumGuests(
     return [];
   }
 
-  const persons = await prisma.system_interprets_members.findMany({
-    where: {
-      id_m: {
-        in: guests
-          .map((item) => item.member)
-          .filter((id): id is number => id !== null),
+  const persons =
+    await prisma.system_interprets_members.findMany({
+      where: {
+        id_m: {
+          in: guests
+            .map((item) => item.member)
+            .filter(
+              (id): id is number => id !== null
+            ),
+        },
       },
-    },
-    select: {
-      id_m: true,
-      name: true,
-    },
-  });
+      select: {
+        id_m: true,
+        name: true,
+      },
+    });
 
   return guests.map((item) => ({
     ...item,
     person:
       persons.find(
-        (person) => person.id_m === item.member
+        (person) =>
+          person.id_m === item.member
       ) ?? null,
   }));
 }
+
 export async function getLatestAlbumCovers(
   limit: number = 6
 ) {
-
-  const albums = await prisma.system_discography.findMany({
-    where: {
-      obal: {
-        not: "",
+  const albums =
+    await prisma.system_discography.findMany({
+      where: {
+        obal: {
+          not: "",
+        },
       },
-    },
 
-    orderBy: {
-      date: "desc",
-    },
-
-    take: limit,
-
-    select: {
-      id_d: true,
-      interpret: true,
-      name: true,
-      vydano: true,
-      obal: true,
-    },
-  });
-
-  const bandIds = albums.map((album) => album.interpret);
-
-  const bands = await prisma.system_interprets.findMany({
-    where: {
-      id_i: {
-        in: bandIds,
+      orderBy: {
+        date: "desc",
       },
-    },
 
-    select: {
-      id_i: true,
-      name: true,
-    },
-  });
+      take: limit,
+
+      select: {
+        id_d: true,
+        interpret: true,
+        name: true,
+        vydano: true,
+        obal: true,
+      },
+    });
+
+  const bandIds = albums.map(
+    (album) => album.interpret
+  );
+
+  const bands =
+    await prisma.system_interprets.findMany({
+      where: {
+        id_i: {
+          in: bandIds,
+        },
+      },
+
+      select: {
+        id_i: true,
+        name: true,
+      },
+    });
 
   const bandMap = new Map(
     bands.map((band) => [
@@ -180,6 +192,47 @@ export async function getLatestAlbumCovers(
 
   return albums.map((album) => ({
     ...album,
-    band: bandMap.get(album.interpret) ?? "",
+    band:
+      bandMap.get(album.interpret) ?? "",
   }));
+}
+
+/**
+ * Vrátí interpreta Various Artists.
+ *
+ * Pokud zatím v databázi neexistuje,
+ * vrátí null.
+ */
+export async function getVariousArtists() {
+  return prisma.system_interprets.findFirst({
+    where: {
+      name: "Various Artists",
+    },
+    select: {
+      id_i: true,
+      name: true,
+    },
+  });
+}
+export async function getVariousArtistsAlbums(
+  artistId: number
+) {
+  return prisma.system_discography.findMany({
+    where: {
+      interpret: artistId,
+    },
+    orderBy: {
+      vydano: "desc",
+    },
+    select: {
+      id_d: true,
+      name: true,
+      interpret: true,
+      type: true,
+      vydano: true,
+      info: true,
+      obal: true,
+      label: true,
+    },
+  });
 }

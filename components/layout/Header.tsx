@@ -112,14 +112,26 @@ export default async function Header({
           />
 
           <MenuItem
-            title="Others"
-            items={[
-              "Various Artists",
-              "Magazines",
-              "Webzines",
-              "Studios",
-            ]}
-          />
+  title="Others"
+  items={[
+    {
+      label: "Various Artists",
+      href: "/others/various-artists",
+    },
+    {
+      label: "Magazines",
+      href: "/others/magazines",
+    },
+    {
+      label: "Webzines",
+      href: "/others/webzines",
+    },
+    {
+      label: "Studios",
+      href: "/others/studios",
+    },
+  ]}
+/>
 
         </nav>
 
