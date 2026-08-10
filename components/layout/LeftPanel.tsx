@@ -1,8 +1,12 @@
+"use client";
+
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 
 import Pagination from "@/components/layout/Pagination";
 import { PAGE_SIZE } from "@/lib/constants";
 import { buildCatalogUrl } from "@/lib/utils/catalogUrl";
+
 type Band = {
   id_i: number;
   name: string;
@@ -37,6 +41,25 @@ export default function LeftPanel({
   currentPage = 1,
   totalItems = bands.length,
 }: LeftPanelProps) {
+  const listRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!selectedId || !listRef.current) {
+      return;
+    }
+
+    const selectedElement = listRef.current.querySelector(
+      `[data-band-id="${selectedId}"]`
+    );
+
+    if (selectedElement instanceof HTMLElement) {
+      selectedElement.scrollIntoView({
+        block: "center",
+        behavior: "smooth",
+      });
+    }
+  }, [selectedId]);
+
   return (
     <aside className="flex h-[calc(100vh-110px)] flex-col rounded bg-zinc-900 p-4">
 
@@ -62,23 +85,29 @@ export default function LeftPanel({
         </>
       )}
 
-      <div className="flex-1 overflow-y-auto">
+      <div
+        ref={listRef}
+        className="flex-1 overflow-y-auto"
+      >
         <ul className="space-y-0.5">
+
           {bands.map((band) => {
+
             const href =
-  baseUrl === "/"
-    ? buildCatalogUrl({
-        letter,
-        page: currentPage,
-        band: band.id_i,
-      })
-    : `${baseUrl}?page=${currentPage}&band=${band.id_i}`;
+              baseUrl === "/"
+                ? buildCatalogUrl({
+                    letter,
+                    page: currentPage,
+                    band: band.id_i,
+                  })
+                : `${baseUrl}?page=${currentPage}&band=${band.id_i}`;
 
             const active = band.id_i === selectedId;
 
             return (
               <li
                 key={band.id_i}
+                data-band-id={band.id_i}
                 className={
                   active
                     ? "rounded border-l-4 border-red-600 bg-red-950/30 px-2 py-0.5"
@@ -98,6 +127,7 @@ export default function LeftPanel({
               </li>
             );
           })}
+
         </ul>
       </div>
 

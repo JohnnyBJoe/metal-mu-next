@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 
 import Pagination from "@/components/layout/Pagination";
@@ -27,6 +30,25 @@ export default function PersonSidebar({
   currentPage = 1,
   totalItems = persons.length,
 }: PersonSidebarProps) {
+  const listRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!selectedId || !listRef.current) {
+      return;
+    }
+
+    const selectedElement = listRef.current.querySelector(
+      `[data-person-id="${selectedId}"]`
+    );
+
+    if (selectedElement instanceof HTMLElement) {
+      selectedElement.scrollIntoView({
+        block: "center",
+        behavior: "smooth",
+      });
+    }
+  }, [selectedId]);
+
   return (
     <aside className="flex h-[calc(100vh-110px)] flex-col rounded bg-zinc-900 p-4">
 
@@ -38,7 +60,10 @@ export default function PersonSidebar({
         {totalItems} musicians
       </div>
 
-      <div className="flex-1 overflow-y-auto">
+      <div
+        ref={listRef}
+        className="flex-1 overflow-y-auto"
+      >
 
         <ul className="space-y-0.5">
 
@@ -50,12 +75,14 @@ export default function PersonSidebar({
             return (
               <li
                 key={person.id_m}
+                data-person-id={person.id_m}
                 className={
                   active
                     ? "rounded border-l-4 border-red-600 bg-red-950/30 px-2 py-0.5"
                     : "rounded border border-zinc-800 px-2 py-0.5 hover:bg-zinc-800"
                 }
               >
+
                 <Link
                   href={`/persons?letter=${letter}&page=${currentPage}&person=${person.id_m}`}
                   className={
@@ -66,6 +93,7 @@ export default function PersonSidebar({
                 >
                   {person.name}
                 </Link>
+
               </li>
             );
           })}
