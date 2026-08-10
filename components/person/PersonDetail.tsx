@@ -12,7 +12,9 @@ type PersonDetailProps = {
   person: PersonWithBand;
 };
 
-function hasValue(value: string | null | undefined) {
+function hasValue(
+  value: string | null | undefined
+) {
   if (!value) {
     return false;
   }
@@ -25,6 +27,7 @@ export default function PersonDetail({
 }: PersonDetailProps) {
   return (
     <main className="rounded bg-zinc-900 p-6">
+
       <h1 className="mb-6 text-4xl font-bold text-red-500">
         {person.name}
       </h1>
@@ -33,13 +36,15 @@ export default function PersonDetail({
 
         {hasValue(person.real_name) && (
           <div>
-            <strong>Real name:</strong> {person.real_name}
+            <strong>Real name:</strong>{" "}
+            {person.real_name}
           </div>
         )}
 
         {hasValue(person.instrument) && (
           <div>
-            <strong>Instrument:</strong> {person.instrument}
+            <strong>Instrument:</strong>{" "}
+            {person.instrument}
           </div>
         )}
 
@@ -65,38 +70,41 @@ export default function PersonDetail({
         )}
 
         {person.bandName && (
-  <div>
-    <strong>Bands:</strong>
+          <div>
+            <strong>Band:</strong>
 
-    <div className="mt-2 ml-4">
-      <Link
-        href={`/?band=${person.interpret}`}
-        className="block text-red-500 hover:underline"
-      >
-        {person.bandName}
-      </Link>
+            <div className="ml-4 mt-1">
+              <Link
+                href={`/bands?band=${person.interpret}`}
+                className="text-red-500 hover:underline"
+              >
+                {person.bandName}
+              </Link>
 
-      {person.pusobeni && (
-        <div className="text-sm text-zinc-500">
-          {person.pusobeni}
-        </div>
-      )}
-    </div>
-  </div>
-)}
+              {hasValue(person.pusobeni) && (
+                <div className="text-sm text-zinc-500">
+                  {person.pusobeni}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
       </div>
 
       {person.text && (
         <section className="mt-8">
+
           <div
             className="prose prose-invert max-w-none text-zinc-300"
             dangerouslySetInnerHTML={{
               __html: person.text,
             }}
           />
+
         </section>
       )}
+
     </main>
   );
 }
