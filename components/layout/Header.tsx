@@ -29,13 +29,13 @@ export default async function Header({
   return (
     <header className="border-b border-zinc-800 bg-black">
 
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-6">
 
         <div className="w-56">
 
           {!home && (
 
-            <div className="text-3xl font-bold text-red-600">
+            <div className="text-2xl font-bold text-red-600">
               Rock&amp;Metal Book
             </div>
 
@@ -43,7 +43,7 @@ export default async function Header({
 
         </div>
 
-        <nav className="flex gap-6">
+        <nav className="flex gap-4 whitespace-nowrap">
 
           <MenuItem
             title="News & Updates"
@@ -133,7 +133,14 @@ export default async function Header({
   ]}
 />
 
-        </nav>
+                </nav>
+
+        <a
+          href="/donate"
+          className="text-sm font-semibold text-red-500 transition hover:text-red-400"
+        >
+          Donate
+        </a>
 
         <SearchBox />
 

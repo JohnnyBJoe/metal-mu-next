@@ -106,8 +106,8 @@ model system_interprets_members {
   pusobeni       String?   @db.VarChar(200)
   date_of_dead   DateTime? @db.Date
   stav           Bytes     @default(dbgenerated("('0')")) @db.Binary(1)
-date DateTime @default(dbgenerated("CURRENT_TIMESTAMP")) @db.DateTime(0)
-edit DateTime @default(dbgenerated("CURRENT_TIMESTAMP")) @db.DateTime(0)
+  date           DateTime  @default(dbgenerated("CURRENT_TIMESTAMP")) @db.DateTime(0)
+  edit           DateTime  @default(dbgenerated("CURRENT_TIMESTAMP")) @db.DateTime(0)
 
   @@fulltext([name], map: "name")
   @@fulltext([text], map: "text")
@@ -144,4 +144,13 @@ model system_album_members {
 
   @@index([album], map: "idx_album")
   @@index([member], map: "idx_member")
+}
+
+model system_ads {
+  id                  Int     @id @default(autoincrement()) @db.UnsignedInt
+  image               String  @db.VarChar(255)
+  target_url          String  @db.VarChar(500)
+  ordered_impressions Int     @db.UnsignedInt
+  impressions         Int     @default(0) @db.UnsignedInt
+  cpm                 Decimal @db.Decimal(10, 2)
 }
