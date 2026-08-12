@@ -153,4 +153,5 @@ model system_ads {
   ordered_impressions Int     @db.UnsignedInt
   impressions         Int     @default(0) @db.UnsignedInt
   cpm                 Decimal @db.Decimal(10, 2)
+  active              Boolean @default(true)
 }

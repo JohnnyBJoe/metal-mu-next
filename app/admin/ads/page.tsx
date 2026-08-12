@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import AdStatusButton from "@/components/admin/ads/AdStatusButton";
 
 export default async function AdminAdsPage() {
   const ads = await prisma.system_ads.findMany({
@@ -44,6 +45,7 @@ export default async function AdminAdsPage() {
                   <th className="px-4 py-3">URL</th>
                   <th className="px-4 py-3">Impressions</th>
                   <th className="px-4 py-3">CPM</th>
+                  <th className="px-4 py-3">Status</th>
                 </tr>
               </thead>
 
@@ -85,6 +87,12 @@ export default async function AdminAdsPage() {
                     <td className="px-4 py-3 tabular-nums text-zinc-300">
                       {ad.cpm.toString()}
                     </td>
+                    <td className="px-4 py-3">
+  <AdStatusButton
+    adId={ad.id}
+    active={ad.active}
+  />
+</td>
                   </tr>
                 ))}
               </tbody>
