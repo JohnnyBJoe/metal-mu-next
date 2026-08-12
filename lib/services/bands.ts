@@ -110,6 +110,7 @@ export async function getBand(id: number) {
 
       homepage: true,
 
+      info: true,
       biografie: true,
 
       foto: true,

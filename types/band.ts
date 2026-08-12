@@ -9,6 +9,7 @@ export type Band = {
 
   homepage: string;
 
+  info: string;
   biografie: string;
 
   foto: string;

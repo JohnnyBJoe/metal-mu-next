@@ -169,6 +169,18 @@ export default function CenterPanel({
         currentPage={currentPage}
       />
 
+      {band.info && (
+        <section className="mb-8">
+          <h2 className="mb-3 border-b border-zinc-700 pb-2 text-2xl font-semibold text-red-500">
+            Latest Information
+          </h2>
+
+          <div className="whitespace-pre-line text-zinc-300">
+            {band.info}
+          </div>
+        </section>
+      )}
+
       {band.biografie && (
         <section>
           <h2 className="mb-3 border-b border-zinc-700 pb-2 text-2xl font-semibold text-red-500">
@@ -176,7 +188,7 @@ export default function CenterPanel({
           </h2>
 
           <div
-            className="prose prose-invert max-w-none text-zinc-300"
+            className="prose prose-invert max-w-none  text-zinc-300"
             dangerouslySetInnerHTML={{
               __html: band.biografie,
             }}
