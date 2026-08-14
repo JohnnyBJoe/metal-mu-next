@@ -1,12 +1,14 @@
 import Link from "next/link";
 
 import type { Track } from "@/types/track";
+import TrackDetail from "@/components/track/TrackDetail";
 
 type TrackListProps = {
   letter: string;
   bandId: number;
   albumId: number;
   tracks: Track[];
+  selectedTrack: Track | null;
 
   baseUrl?: string;
   personId?: number;
@@ -18,6 +20,7 @@ export default function TrackList({
   bandId,
   albumId,
   tracks,
+  selectedTrack,
   baseUrl = "/",
   personId,
   currentPage = 1,
@@ -39,26 +42,41 @@ export default function TrackList({
               ? `/?letter=${letter}&page=${currentPage}&band=${bandId}&album=${albumId}&track=${track.id_t}`
               : `${baseUrl}?letter=${letter}&page=${currentPage}&person=${personId}&album=${albumId}&track=${track.id_t}`;
 
+          const isSelected =
+            selectedTrack?.id_t === track.id_t;
+
           return (
             <li
               key={track.id_t}
-              className="flex items-center gap-2 py-0.5 text-sm"
+              className="py-0.5 text-sm"
             >
-              <span className="w-7 text-right tabular-nums text-zinc-500">
-                {index + 1}.
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="w-7 text-right tabular-nums text-zinc-500">
+                  {index + 1}.
+                </span>
 
-              <Link
-                href={href}
-                className="flex-1 text-zinc-300 transition-colors hover:text-red-500"
-              >
-                {track.name}
-              </Link>
+                <Link
+                  href={href}
+                  className={`flex-1 transition-colors ${
+                    isSelected
+                      ? "font-semibold text-red-500"
+                      : "text-zinc-300 hover:text-red-500"
+                  }`}
+                >
+                  {track.name}
+                </Link>
 
-              {/* Rezerva pro budoucí délku skladby */}
-              <span className="w-12 text-right tabular-nums text-xs text-zinc-500">
-                {/* {track.length} */}
-              </span>
+                {/* Rezerva pro budoucí délku skladby */}
+                <span className="w-12 text-right tabular-nums text-xs text-zinc-500">
+                  {/* {track.length} */}
+                </span>
+              </div>
+
+              {isSelected && (
+                <div className="ml-7 mt-3 mb-4">
+                  <TrackDetail track={track} />
+                </div>
+              )}
             </li>
           );
         })}

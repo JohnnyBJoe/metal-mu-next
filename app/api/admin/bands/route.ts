@@ -172,7 +172,7 @@ export async function POST(request: Request) {
         );
       }
     }
-
+const now = new Date();
     const band =
       await prisma.system_interprets.create({
         data: {
@@ -187,6 +187,8 @@ export async function POST(request: Request) {
           biografie,
           country,
           homepage,
+          date: now,
+  edit: now,
         },
         select: {
           id_i: true,

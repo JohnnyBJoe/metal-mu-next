@@ -55,6 +55,7 @@ export default async function BandsPage({
               album={data.selectedAlbum}
               albumTracks={data.albumTracks}
               selectedTrack={data.selectedTrack}
+              baseUrl="/bands"
             />
           ) : (
             <CenterPanel

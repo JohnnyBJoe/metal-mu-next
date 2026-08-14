@@ -4,7 +4,6 @@ import type { Album } from "@/types/album";
 import type { Track } from "@/types/track";
 
 import TrackList from "@/components/album/TrackList";
-import TrackDetail from "@/components/track/TrackDetail";
 
 import { normalizeLabel } from "@/lib/helpers/labels";
 
@@ -113,14 +112,11 @@ export default function AlbumDetail({
         bandId={album.interpret}
         albumId={album.id_d}
         tracks={albumTracks}
+        selectedTrack={selectedTrack}
         baseUrl={baseUrl}
         personId={personId}
         currentPage={currentPage}
       />
-
-      {selectedTrack && (
-        <TrackDetail track={selectedTrack} />
-      )}
 
     </main>
   );
